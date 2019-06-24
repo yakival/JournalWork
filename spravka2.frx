@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/10/2019 07:59:07" ReportInfo.Modified="06/24/2019 05:40:19" ReportInfo.CreatorVersion="1.9.13.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+
+    private void Text3_AfterData(object sender, EventArgs e)
+    {
+      if(((Double)Report.GetColumnValue(&quot;StudentT0.Pr&quot;))&gt;95) Text3.FillColor = System.Drawing.Color.Yellow;
+    }
+
+    private void Text16_BeforePrint(object sender, EventArgs e)
+    {
+      if((ToDouble(((Int32)Report.GetColumnValue(&quot;Class_.countStudent&quot;)))*100)/(ToDouble(((Int32)Report.GetColumnValue(&quot;Class_.countStudent&quot;))+((Int32)Report.GetColumnValue(&quot;Class_.countStudentFree&quot;))))&lt;30) Text16.FillColor = System.Drawing.Color.Yellow;
+    }
+
+    private void Text19_BeforePrint(object sender, EventArgs e)
+    {
+      if((ToDouble(((Int32)Report.GetColumnValue(&quot;Class_.countFamily&quot;)))*100)/(ToDouble(((Int32)Report.GetColumnValue(&quot;Class_.countFamily&quot;))+((Int32)Report.GetColumnValue(&quot;Class_.countFamilyFree&quot;))))&lt;50) Text19.FillColor = System.Drawing.Color.Yellow;
+    }
+  }
+}
+</ScriptText>
+  <Dictionary>
+    <TableDataSource Name="StudentT0" ReferenceName="Data.StudentT0" DataType="System.Int32" Enabled="true">
+      <Column Name="Name" DataType="System.String"/>
+      <Column Name="Count" DataType="System.Int32"/>
+      <Column Name="Pr" DataType="System.Double"/>
+      <Column Name="Tot" DataType="System.Int32"/>
+      <Column Name="ClassNum" DataType="System.Int32"/>
+    </TableDataSource>
+    <TableDataSource Name="Family" ReferenceName="Data.Family" DataType="System.Int32" Enabled="true">
+      <Column Name="Name" DataType="System.String"/>
+      <Column Name="Class_" DataType="System.String"/>
+      <Column Name="Count" DataType="System.Int32"/>
+      <Column Name="ClassNum" DataType="System.Int32"/>
+    </TableDataSource>
+    <TableDataSource Name="Class_" ReferenceName="Data.Class_" DataType="System.Int32" Enabled="true">
+      <Column Name="Name" DataType="System.String"/>
+      <Column Name="inputTutor" DataType="System.Int32"/>
+      <Column Name="inputStudent" DataType="System.Int32"/>
+      <Column Name="inputFamily" DataType="System.Int32"/>
+      <Column Name="countTutor" DataType="System.Int32"/>
+      <Column Name="countStudent" DataType="System.Int32"/>
+      <Column Name="countFamily" DataType="System.Int32"/>
+      <Column Name="countTutorFree" DataType="System.Int32"/>
+      <Column Name="countStudentFree" DataType="System.Int32"/>
+      <Column Name="countFamilyFree" DataType="System.Int32"/>
+      <Column Name="tot" DataType="System.Int32"/>
+      <Column Name="ClassNum" DataType="System.Int32"/>
+    </TableDataSource>
+    <TableDataSource Name="Tutor" ReferenceName="Data.Tutor" DataType="System.Int32" Enabled="true">
+      <Column Name="Name" DataType="System.String"/>
+      <Column Name="Class_" DataType="System.String"/>
+      <Column Name="ClassNum" DataType="System.Int32"/>
+      <Column Name="Count" DataType="System.Int32"/>
+    </TableDataSource>
+    <Parameter Name="dt1" DataType="System.String"/>
+    <Parameter Name="dt2" DataType="System.String"/>
+    <Parameter Name="totTutor" DataType="System.Int32"/>
+    <Parameter Name="totStudent" DataType="System.Int32"/>
+    <Parameter Name="totFamily" DataType="System.Int32"/>
+    <Parameter Name="dt1_day" DataType="System.String"/>
+    <Parameter Name="dt1_month" DataType="System.String"/>
+    <Parameter Name="dt1_smonth" DataType="System.String"/>
+    <Parameter Name="dt2_day" DataType="System.String"/>
+    <Parameter Name="dt2_month" DataType="System.String"/>
+    <Parameter Name="dt2_smonth" DataType="System.String"/>
+    <Parameter Name="totTutorInp" DataType="System.Int32"/>
+    <Parameter Name="totStudentInp" DataType="System.Int32"/>
+    <Parameter Name="totFamilyInp" DataType="System.Int32"/>
+    <Parameter Name="totTutorFree" DataType="System.Int32"/>
+    <Parameter Name="totStudentFree" DataType="System.Int32"/>
+    <Parameter Name="totFamilyFree" DataType="System.Int32"/>
+    <Parameter Name="strGoodClass" DataType="System.String"/>
+    <Parameter Name="countDayStudent" DataType="System.Int32"/>
+    <Parameter Name="countDayFamily" DataType="System.Int32"/>
+    <Parameter Name="dt1_year" DataType="System.String"/>
+    <Parameter Name="dt2_year" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" RawPaperSize="9">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="387.45">
+      <RichObject Name="Rich1" Width="718.2" Height="387.45" Text="{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset204{\*\fname Times New Roman;}Times New Roman CYR;}{\f1\fnil\fcharset0 Times New Roman;}{\f2\fnil Times New Roman;}{\f3\fnil\fcharset0 Segoe UI Symbol;}}&#13;&#10;{\*\generator Riched20 6.3.9600}\viewkind4\uc1 &#13;&#10;\pard\qc\b\f0\fs24\'d1\'ef\'f0\'e0\'e2\'ea\'e0 \'ef\'ee \'ef\'f0\'ee\'e2\'e5\'f0\'ea\'e5 \'e0\'ea\'f2\'e8\'e2\'ed\'ee\'f1\'f2\'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e8 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'e5 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb\b0\par&#13;&#10;&#13;&#10;\pard\par&#13;&#10;\ul\b\'d6\'e5\'eb\'fc \'ef\'f0\'ee\'e2\'e5\'f0\'ea\'e8\ulnone\b0 : \'ef\'f0\'ee\'e2\'e5\'f0\'e8\'f2\'fc \'f0\'e0\'e1\'ee\'f2\'f3 \'ea\'eb\'e0\'f1\'f1\'ed\'fb\'f5 \'f0\'f3\'ea\'ee\'e2\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'e5 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \'cc\'ee\'f1\'ea\'ee\'e2\'f1\'ea\'ee\'e9 \'ee\'e1\'eb\'e0\'f1\'f2\'e8 \par&#13;&#10;\par&#13;&#10;\b\'c7\'e0\'e4\'e0\'f7\'e8:\b0\par&#13;&#10;1. \'ce\'f2\'f7\'e5\'f2 \'ef\'ee \'e0\'ea\'f2\'e8\'e2\'ed\'ee\'f1\'f2\'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e8 \'e8\'f5 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'f1 [dt1] \'ef\'ee [dt2].\par&#13;&#10;2. \'c2\'f5\'ee\'e4 \'ed\'e0 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \'f7\'e5\'f0\'e5\'e7 \'ef\'ee\'f0\'f2\'e0\'eb \'c3\'ee\'f1\'f3\'f1\'eb\'f3\'e3 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec\'e8 \'e8 \'f3\'f7\'e0\'f9\'e8\'ec\'e8\'f1\'ff (14 \'eb\'e5\'f2 \'e8 \'f1\'f2\'e0\'f0\'f8\'e5).\par&#13;&#10;\par&#13;&#10;\f1\lang1033\tab\f0\lang1049\'c2 \'ef\'e5\'f0\'e8\'ee\'e4 [dt1_day].[dt1_\f1\lang1033 m\f0\lang1049 onth] \f2\endash\f1\lang1033  [dt2_day].[dt2_month]. \f0\lang1049\'ef\'f0\'ee\'e2\'e5\'e4\'e5\'ed \'ec\'ee\'ed\'e8\'f2\'ee\'f0\'e8\'ed\'e3 \'e2\'e5\'e4\'e5\'ed\'e8\'ff \'dd\'c6.\par&#13;&#10;\f1\lang1033\tab\f0\lang1049\'c5\'e6\'e5\'e4\'ed\'e5\'e2\'ed\'ee 100 % \'f3\'f7\'e8\'f2\'e5\'eb\'e5\'e9 \'cc\'ce\'d3 \'d1\'ce\'d8 \f3\lang1033 ______\f1  \f0\lang1049\'f0\'e5\'e0\'eb\'e8\'e7\'f3\'fe\'f2 \'ec\'f3\'ed\'e8\'f6\'e8\'ef\'e0\'eb\'fc\'ed\'f3\'fe \'f3\'f1\'eb\'f3\'e3\'f3 \'ef\'ee \'e8\'ed\'f4\'ee\'f0\'ec\'e8\'f0\'ee\'e2\'e0\'ed\'e8\'fe \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'ee \'ef\'ee\'f1\'e5\'f9\'e0\'e5\'ec\'ee\'f1\'f2\'e8 \'e8 \'f3\'f1\'ef\'e5\'e2\'e0\'e5\'ec\'ee\'f1\'f2\'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'e5 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb, \'f2\'e0\'ea \'ea\'e0\'ea \'e2 \'f8\'ea\'ee\'eb\'e5 \'f1\'ee\'e7\'e4\'e0\'ed\'fb \'ee\'ef\'f2\'e8\'ec\'e0\'eb\'fc\'ed\'fb\'e5 \'f3\'f1\'eb\'ee\'e2\'e8\'ff \'e4\'eb\'ff \'f0\'e0\'e1\'ee\'f2\'fb \'ef\'e5\'e4\'e0\'e3\'ee\'e3\'ee\'e2 \'e8 \'e0\'e4\'ec\'e8\'ed\'e8\'f1\'f2\'f0\'e0\'f6\'e8\'e8 \'f8\'ea\'ee\'eb\'fb \'f1 \'fd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'ec\'e8 \'e6\'f3\'f0\'ed\'e0\'eb\'e0\'ec\'e8. \'c2\'f1\'e5 \'ea\'e0\'e1\'e8\'ed\'e5\'f2\'fb,  \'e2 \'ea\'ee\'f2\'ee\'f0\'fb\'f5 \'e7\'e0\'ed\'e8\'ec\'e0\'fe\'f2\'f1\'ff \'f3\'f7\'e0\'f9\'e8\'e5\'f1\'ff 1-11\f2\endash\f0\'f5 \'ea\'eb\'e0\'f1\'f1\'ee\'e2, \'ee\'f1\'ed\'e0\'f9\'e5\'ed\'fb \'e0\'e2\'f2\'ee\'ec\'e0\'f2\'e8\'e7\'e8\'f0\'ee\'e2\'e0\'ed\'ed\'fb\'ec\'e8 \'f0\'e0\'e1\'ee\'f7\'e8\'ec\'e8 \'ec\'e5\'f1\'f2\'e0\'ec\'e8 \'f3\'f7\'e8\'f2\'e5\'eb\'ff, \'e8\'ec\'e5\'fe\'f9\'e8\'ec\'e8 \'e2\'fb\'f5\'ee\'e4 \'e2 \'c8\'ed\'f2\'e5\'f0\'ed\'e5\'f2.\par&#13;&#10;\f1\lang1033\tab\f0\lang1049\'cd\'e0 [dt2_day]\f1\lang1033  \f0\lang1049 [dt2_smonth]\f1\lang1033  \f0\lang1049\'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'e5 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \'e7\'e0\'f0\'e5\'e3\'e8\'f1\'f2\'f0\'e8\'f0\'ee\'e2\'e0\'ed\'ee \'e8 \'e8\'ec\'e5\'fe\'f2 \'e2\'ee\'e7\'ec\'ee\'e6\'ed\'ee\'f1\'f2\'fc \'ef\'f0\'ee\'f1\'ec\'e0\'f2\'f0\'e8\'e2\'e0\'f2\'fc \'f1\'e2\'ee\'e8 \'ee\'f6\'e5\'ed\'ea\'e8, \'f0\'e0\'f1\'ef\'e8\'f1\'e0\'ed\'e8\'e5 \'e8 \'e4\'ee\'ec\'e0\'f8\'ed\'e5\'e5 \'e7\'e0\'e4\'e0\'ed\'e8\'e5 [totStudent]\f1\lang1033  \f0\lang1049\'f3\'f7\'e0\'f9\'e8\'e9\'f1\'ff. \'c2\'f5\'ee\'e4 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'f1\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2 \f2\endash\f1\lang1033  [FormatNumber((ToDouble([totFamilyInp])*100\f0\lang1049 )\f1\lang1033 /ToDouble([totFamily]),1)]%. \f0\lang1049\'c2 \'f2\'e5\'f7\'e5\'ed\'e8\'e5 \'ec\'e5\'f1\'ff\'f6\'e0 \'e8\'ed\'f2\'e5\'f0\'e5\'f1\'ee\'e2\'e0\'eb\'e8\'f1\'fc \'ef\'ee\'f1\'e5\'f9\'e0\'e5\'ec\'ee\'f1\'f2\'fc\'fe \'e8 \'f3\'f1\'ef\'e5\'e2\'e0\'e5\'ec\'ee\'f1\'f2\'fc\'fe \'f1\'e2\'ee\'e8\'f5 \'e4\'e5\'f2\'e5\'e9 \f2\endash\f1\lang1033  [totFamilyInp] \f0\lang1049\'f0\'ee\'e4\'e8\'f2\'e5\'eb\'fc.\par&#13;&#10;\par&#13;&#10;\b\'cd\'e5 \'e7\'e0\'f5\'ee\'e4\'e8\'eb\'e8 \'e2 \'f1\'e2\'ee\'e9 \'e4\'ed\'e5\'e2\'ed\'e8\'ea \'f3\'f7\'e0\'f9\'e8\'e5\'f1\'ff\b0 :\par&#13;&#10;}&#13;&#10;"/>
+    </ReportTitleBand>
+    <DataBand Name="Data1" Top="391.45" Width="75.6" Height="56.7" Fill.Color="White" CanGrow="true" CanBreak="true" DataSource="StudentT0" Columns.Count="8" Columns.Width="75.6">
+      <TextObject Name="Text1" Width="75.6" Height="18.9" Border.Lines="All" Text="[StudentT0.Name]" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text2" Top="18.9" Width="75.6" Height="18.9" Border.Lines="All" Text="[StudentT0.Count]" HorzAlign="Center"/>
+      <TextObject Name="Text3" Top="37.8" Width="75.6" Height="18.9" Border.Lines="All" AfterDataEvent="Text3_AfterData" Text="[StudentT0.Pr]%" Format="Number" Format.UseLocale="false" Format.DecimalDigits="0" Format.DecimalSeparator="," Format.GroupSeparator=" " Format.NegativePattern="1" HorzAlign="Center"/>
+      <Sort>
+        <Sort Expression="[StudentT0.ClassNum]"/>
+      </Sort>
+    </DataBand>
+    <DataBand Name="Data2" Top="597.9" Width="718.2" Height="18.9" CanGrow="true" CanShrink="true" CanBreak="true" DataSource="Family" MaxRows="10">
+      <TextObject Name="Text4" Left="56.7" Width="94.5" Height="18.9" Border.Lines="All" Text="[Row#]"/>
+      <TextObject Name="Text5" Left="151.2" Width="292.95" Height="18.9" Border.Lines="All" Text="[Family.Name]"/>
+      <TextObject Name="Text6" Left="444.15" Width="94.5" Height="18.9" Border.Lines="All" Text="[Family.Class_]" HorzAlign="Center"/>
+      <TextObject Name="Text7" Left="538.65" Width="94.5" Height="18.9" Border.Lines="All" Text="[Family.Count]" HorzAlign="Center"/>
+      <DataHeaderBand Name="DataHeader1" Top="452.15" Width="718.2" Height="141.75" CanGrow="true" CanShrink="true" CanBreak="true" KeepWithData="true">
+        <RichObject Name="Rich2" Top="9.45" Width="718.2" Height="113.4" CanShrink="true" Text="{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset0 Times New Roman;}{\f1\fnil\fcharset204{\*\fname Times New Roman;}Times New Roman CYR;}}&#13;&#10;{\*\generator Riched20 6.3.9600}\viewkind4\uc1 &#13;&#10;\pard\b\f0\fs24\lang1033\tab\f1\lang1049\'cd\'e0\'e8\'e1\'ee\'eb\'e5\'e5 \'e0\'ea\'f2\'e8\'e2\'ed\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f2 \'dd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'e9 \'e4\'ed\'e5\'e2\'ed\'e8\'ea \b0\'f3\'f7\'e0\'f9\'e8\'e5\'f1\'ff [strGoodClass]. \par&#13;&#10;\f0\lang1033\tab\f1\lang1049\'c5\'e6\'e5\'e4\'ed\'e5\'e2\'ed\'ee \'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f2\'f1\'ff \'dd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'ec \'e4\'ed\'e5\'e2\'ed\'e8\'ea\'ee\'ec [countDayStudent] \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff, \'f7\'f2\'ee \'f1\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2 \f0\lang1033 [FormatNumber((ToDouble([\f1\lang1049 countDayStudent\f0\lang1033 ])*100\f1\lang1049 )\f0\lang1033 /ToDouble([totStudent]),1)]%\f1\lang1049  \'e8 [countDayFamily] \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 - \'f1\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2 \f0\lang1033 [FormatNumber((ToDouble([countDayFamily])*100\f1\lang1049 )\f0\lang1033 /ToDouble([totFamily]),1)]%\f1\lang1049 .\par&#13;&#10;\par&#13;&#10;\b\'cd\'e0\'e8\'e1\'ee\'eb\'e5\'e5 \'e0\'ea\'f2\'e8\'e2\'ed\'fb\'e5 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e8\b0 :\par&#13;&#10;}&#13;&#10;"/>
+        <TextObject Name="Text8" Left="56.7" Top="122.85" Width="94.5" Height="18.9" Border.Lines="All" Text="№" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text9" Left="151.2" Top="122.85" Width="292.95" Height="18.9" Border.Lines="All" Text="Пользователь" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text10" Left="444.15" Top="122.85" Width="94.5" Height="18.9" Border.Lines="All" Text="Класс" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text11" Left="538.65" Top="122.85" Width="94.5" Height="18.9" Border.Lines="All" Text="Входы" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      </DataHeaderBand>
+      <DataFooterBand Name="DataFooter1" Top="620.8" Width="718.2" Height="37.8" CanGrow="true" CanShrink="true">
+        <RichObject Name="Rich3" Top="9.45" Width="718.2" Height="28.35" CanGrow="true" CanShrink="true" Text="{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fnil\fcharset204{\*\fname Arial;}Arial CYR;}{\f2\fnil\fcharset0 Times New Roman;}{\f3\fnil\fcharset204{\*\fname Times New Roman;}Times New Roman CYR;}{\f4\fnil\fcharset204 Tahoma;}}&#13;&#10;{\*\generator Riched20 6.3.9600}\viewkind4\uc1 &#13;&#10;\pard\fs20\lang1033\tab\b\f1\lang1049\'c2\'f5\'ee\'e4 \'e2 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \'f7\'e5\'f0\'e5\'e7 \'c5\'d1\'c8\'c0 \b0\'ee\'f1\'f3\'f9\'e5\'f1\'f2\'e2\'eb\'ff\'fe\'f2 \f2\fs24\lang1033 [FormatNumber((ToDouble([totStudentInp])*100\f3\lang1049 )\f2\lang1033 /ToDouble([totStudent]),1)]%\f1\fs20\lang1049  \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e8 \f2\fs24\lang1033 [totFamilyInp]\f1\fs20\lang1049  \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9, \'f7\'f2\'ee \'f1\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2 \f2\fs24\lang1033 [FormatNumber((ToDouble([totFamilyInp])*100\f3\lang1049 )\f2\lang1033 /ToDouble([totFamily]),1)]%\f1\fs20\lang1049 .\f4\fs17\par&#13;&#10;}&#13;&#10;"/>
+      </DataFooterBand>
+      <Sort>
+        <Sort Expression="[Family.Count]" Descending="true"/>
+      </Sort>
+    </DataBand>
+    <DataBand Name="Data3" Top="713.85" Width="718.2" Height="37.8" CanGrow="true" CanShrink="true" DataSource="Class_">
+      <TextObject Name="Text12" Width="75.6" Height="18.9" Border.Lines="All" Text="[Class_.Name]" HorzAlign="Center"/>
+      <TextObject Name="Text13" Left="75.6" Width="94.5" Height="18.9" Border.Lines="All" Text="[[Class_.countStudent]+[Class_.countStudentFree]]" HorzAlign="Center"/>
+      <TextObject Name="Text14" Left="170.1" Width="94.5" Height="18.9" Border.Lines="All" HorzAlign="Center"/>
+      <TextObject Name="Text15" Left="264.6" Width="85.05" Height="18.9" Border.Lines="All" Text="[Class_.countStudent]" HorzAlign="Center"/>
+      <TextObject Name="Text16" Left="349.65" Width="94.5" Height="18.9" Border.Lines="All" BeforePrintEvent="Text16_BeforePrint" Text="[FormatNumber((ToDouble([Class_.countStudent])*100)/(ToDouble([Class_.countStudent]+[Class_.countStudentFree])),2)]%" HorzAlign="Center"/>
+      <TextObject Name="Text17" Left="444.15" Width="94.5" Height="18.9" Border.Lines="All" Text="[[Class_.countFamily]+[Class_.countFamilyFree]]" HorzAlign="Center"/>
+      <TextObject Name="Text18" Left="538.65" Width="85.05" Height="18.9" Border.Lines="All" Text="[Class_.countFamily]" HorzAlign="Center"/>
+      <TextObject Name="Text19" Left="623.7" Width="94.5" Height="18.9" Border.Lines="All" BeforePrintEvent="Text19_BeforePrint" Text="[FormatNumber((ToDouble([Class_.countFamily])*100)/(ToDouble([Class_.countFamily]+[Class_.countFamilyFree])),2)]%" HorzAlign="Center"/>
+      <DataHeaderBand Name="DataHeader2" Top="662.6" Width="718.2" Height="47.25" CanGrow="true" RepeatOnEveryPage="true">
+        <TextObject Name="Text20" Width="75.6" Height="47.25" Border.Lines="All" Text="Класс" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text21" Left="75.6" Width="94.5" Height="47.25" Border.Lines="All" Text="Количество&#13;&#10;учащихся" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text22" Left="170.1" Width="94.5" Height="47.25" Border.Lines="All" Text="Количество&#13;&#10;учащихся&#13;&#10;старше 14 лет" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text24" Left="264.6" Width="179.55" Height="47.25" Border.Lines="All" Text="Вход через ЕСИА&#13;&#10;учащиеся" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text25" Left="444.15" Width="94.5" Height="47.25" Border.Lines="All" Text="Количество&#13;&#10;родителей&#13;&#10;в ЭЖ" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text27" Left="538.65" Width="179.55" Height="47.25" Border.Lines="All" Text="Вход через ЕСИА&#13;&#10;родители" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      </DataHeaderBand>
+      <DataFooterBand Name="DataFooter2" Top="755.65" Width="718.2" Height="330.75">
+        <RichObject Name="Rich4" Top="9.45" Width="718.2" Height="321.3" Text="{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset204{\*\fname Arial;}Arial CYR;}{\f1\fnil\fcharset2 Wingdings;}{\f2\fnil\fcharset0 Arial;}{\f3\fnil\fcharset204 Tahoma;}}&#13;&#10;{\*\generator Riched20 6.3.9600}\viewkind4\uc1 &#13;&#10;\pard\b\f0\fs20\'c2 \'f6\'e5\'eb\'ff\'f5 \'f3\'e2\'e5\'eb\'e8\'f7\'e5\'ed\'e8\'ff \'fd\'f4\'f4\'e5\'ea\'f2\'e8\'e2\'ed\'ee\'f1\'f2\'e8 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'ff \'fd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'f5 \'e4\'ed\'e5\'e2\'ed\'e8\'ea\'ee\'e2 \'f3\'f7\'e5\'e1\'ed\'ee\'e3\'ee \'e3\'ee\'e4\'e0 \'e8 \'ef\'f0\'e8\'e2\'eb\'e5\'f7\'e5\'ed\'e8\'ff \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'ea \'f0\'e0\'e1\'ee\'f2\'e5 \'e2 \'dd\'c6 \'e4\'e0\'ed\'fb \'f1\'eb\'e5\'e4\'f3\'fe\'f9\'e8\'e5 \'f0\'e5\'ea\'ee\'ec\'e5\'ed\'e4\'e0\'f6\'e8\'e8\b0 :\par&#13;&#10;\f1\'fc\f2\lang1033\tab\f0\lang1049\'ef\'f0\'ee\'e4\'ee\'eb\'e6\'e8\'f2\'fc \'f0\'e0\'e1\'ee\'f2\'f3 \'ef\'ee \'e2\'e5\'e4\'e5\'ed\'e8\'fe \'fd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'f5 \'e6\'f3\'f0\'ed\'e0\'eb\'ee\'e2 \'e8 \'fd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'fb\'f5 \'e4\'ed\'e5\'e2\'ed\'e8\'ea\'ee\'e2 \'f2\'e5\'ea\'f3\'f9\'e5\'e9 \'f3\'f1\'ef\'e5\'e2\'e0\'e5\'ec\'ee\'f1\'f2\'e8 \'e8 \'ef\'ee\'f1\'e5\'f9\'e0\'e5\'ec\'ee\'f1\'f2\'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff\par&#13;&#10;\f1\'fc\f2\lang1033\tab\f0\lang1049\'ef\'f0\'ee\'e4\'ee\'eb\'e6\'e8\'f2\'fc \'f0\'e0\'e1\'ee\'f2\'f3 \'ef\'ee \'e8\'ed\'f4\'ee\'f0\'ec\'e8\'f0\'ee\'e2\'e0\'ed\'e8\'fe \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'ee \'e2\'ee\'e7\'ec\'ee\'e6\'ed\'ee\'f1\'f2\'ff\'f5 \'f1\'e8\'f1\'f2\'e5\'ec\'fb.\par&#13;&#10;\f1\'fc\f2\lang1033\tab\b\f0\lang1049\'c2\'fb\'ff\'f1\'ed\'e8\'f2\'fc\b0  \'e8 \'e2 \'fd\'eb\'e5\'ea\'f2\'f0\'ee\'ed\'ed\'ee\'ec \'e8 \'e1\'f3\'ec\'e0\'e6\'ed\'ee\'ec \'e2\'e8\'e4\'e5 (\'f1\'ec. \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 1) \'ef\'f0\'e5\'e4\'f1\'f2\'e0\'e2\'e8\'f2\'fc \b\'e4\'ee 18.01.2018 \'ef\'f0\'e8\'f7\'e8\'ed\'fb, \'ef\'f0\'e5\'ef\'ff\'f2\'f1\'f2\'e2\'f3\'fe\'f9\'e8\'e5 \'e2\'f5\'ee\'e4\'f3 \'f7\'e5\'f0\'e5\'e7 \'c5\'d1\'c8\'c0 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec\'e8\b0 . \par&#13;&#10;\f1\'fc\f2\lang1033\tab\f0\lang1049\'ee\'f0\'e3\'e0\'ed\'e8\'e7\'ee\'e2\'e0\'f2\'fc \'ea\'ee\'ed\'f1\'f3\'eb\'fc\'f2\'e0\'f6\'e8\'ee\'ed\'ed\'f3\'fe \'ef\'ee\'ec\'ee\'f9\'fc \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec \'ef\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'fe \'f1\'e8\'f1\'f2\'e5\'ec\'fb \'e8 \'e2\'f5\'ee\'e4\'e0 \'f7\'e5\'f0\'e5\'e7 \'c5\'e4\'e8\'ed\'e0\'ff \'f1\'e8\'f1\'f2\'e5\'ec\'e0 \'e8\'e4\'e5\'ed\'f2\'e8\'f4\'e8\'ea\'e0\'f6\'e8\'e8 \'e8 \'e0\'f3\'f2\'e5\'ed\'f2\'e8\'f4\'e8\'ea\'e0\'f6\'e8\'e8 (\'c5\'d1\'c8\'c0).\par&#13;&#10;\f1\'fc\f2\lang1033\tab\f0\lang1049\'e2\'f1\'e5\'ec \'ea\'eb\'e0\'f1\'f1\'ed\'fb\'ec \'f0\'f3\'ea\'ee\'e2\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec \'ee\'f2\'f1\'eb\'e5\'e6\'e8\'e2\'e0\'f2\'fc \'e0\'ea\'f2\'e8\'e2\'ed\'ee\'f1\'f2\'fc \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9 \'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'ed\'e5 \'f0\'e5\'e6\'e5 1 \'f0\'e0\'e7\'e0 \'e2 2 \'ed\'e5\'e4\'e5\'eb\'e8, \'e4\'ee\'e1\'e8\'f2\'fc\'f1\'ff 100% \'e2\'f5\'ee\'e4\'e0 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'f3 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \'e4\'ee 25.12.2019\'e3.\par&#13;&#10;\f1\'fc\f2\lang1033\tab\f0\lang1049\'ea\'eb\'e0\'f1\'f1\'ed\'fb\'ec \'f0\'f3\'ea\'ee\'e2\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec, \b\'e4\'eb\'ff \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'e5\'e9\b0 , \'ea\'ee\'f2\'ee\'f0\'fb\'e5 \'ed\'e5 \'e2\'f5\'ee\'e4\'ff\'f2 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'f3 \'d8\'ea\'ee\'eb\'fc\'ed\'fb\'e9 \'ef\'ee\'f0\'f2\'e0\'eb \b\'ed\'e5 \'f0\'e5\'e6\'e5 \'ee\'e4\'ed\'ee\'e3\'ee \'f0\'e0\'e7\'e0 \'e2 \'ec\'e5\'f1\'ff\'f6 \'f0\'e0\'f1\'ef\'e5\'f7\'e0\'f2\'fb\'e2\'e0\'f2\'fc \'c2\'fb\'ef\'e8\'f1\'ea\'e8 \'f3\'f1\'ef\'e5\'e2\'e0\'e5\'ec\'ee\'f1\'f2\'e8 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'e2 \'e4\'e2\'f3\'f5 \'fd\'ea\'e7\'e5\'ec\'ef\'eb\'ff\'f0\'e0\'f5\b0  \'e8 \'ef\'f0\'e5\'e4\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'f2\'fc \'e8\'ed\'f4\'ee\'f0\'ec\'e0\'f6\'e8\'fe \'ee\'e1 \'ee\'f6\'e5\'ed\'ea\'e0\'f5 \'f3\'f7\'e0\'f9\'e8\'f5\'f1\'ff \'ef\'ee\'e4 \'f0\'ee\'f1\'ef\'e8\'f1\'fc \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec. \b\'ce\'e4\'e8\'ed \'fd\'ea\'e7\'e5\'ec\'ef\'eb\'ff\'f0 \'f1 \'e4\'e0\'f2\'ee\'e9 \'ee\'e7\'ed\'e0\'ea\'ee\'ec\'eb\'e5\'ed\'e8\'ff \'e8 \'ef\'ee\'e4\'ef\'e8\'f1\'fc\'fe \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff \'ee\'f1\'f2\'e0\'e5\'f2\'f1\'ff \'f3 \'ea\'eb\'e0\'f1\'f1\'ed\'ee\'e3\'ee \'f0\'f3\'ea\'ee\'e2\'ee\'e4\'e8\'f2\'e5\'eb\'ff\b0 . \par&#13;&#10;\par&#13;&#10;\f2\lang1033 [dt2_day] [dt2_smonth] [dt2_year]\f0\lang1049\'e3.\par&#13;&#10;\par&#13;&#10;\'c7\'e0\'ec.\'e4\'e8\'f0\'e5\'ea\'f2\'ee\'f0\'e0 \'ef\'ee \'d3\'c2\'d0\tab\tab\tab\tab\f2\lang1033 ______________________________________\f0\lang1049\par&#13;&#10;\par&#13;&#10;\'d1\'ee \'f1\'ef\'f0\'e0\'e2\'ea\'ee\'e9 \'ee\'e7\'ed\'e0\'ea\'ee\'ec\'eb\'e5\'ed\'fb:\f3\fs17\par&#13;&#10;}&#13;&#10;"/>
+      </DataFooterBand>
+      <Sort>
+        <Sort Expression="[Class_.ClassNum]"/>
+      </Sort>
+    </DataBand>
+    <DataBand Name="Data4" Top="1090.4" Width="239.4" Height="28.35" CanGrow="true" CanShrink="true" DataSource="Tutor" Columns.Count="3">
+      <TextObject Name="Text23" Width="236.25" Height="18.9" Text="[Tutor.Name]"/>
+      <DataFooterBand Name="DataFooter3" Top="1122.75" Width="718.2" Height="122.85" StartNewPage="true">
+        <RichObject Name="Rich5" Width="718.2" Height="66.15" Text="{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset204{\*\fname Arial;}Arial CYR;}{\f1\fnil\fcharset204 Tahoma;}}&#13;&#10;{\*\generator Riched20 6.3.9600}\viewkind4\uc1 &#13;&#10;\pard\qr\f0\fs20\'cf\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 1.\par&#13;&#10;&#13;&#10;\pard\par&#13;&#10;&#13;&#10;\pard\qc\b\'cf\'f0\'e8\'f7\'e8\'ed\'fb, \'ef\'f0\'e5\'ef\'ff\'f2\'f1\'f2\'e2\'f3\'fe\'f9\'e8\'e5 \'e2\'f5\'ee\'e4\'f3 \'f7\'e5\'f0\'e5\'e7 \'c5\'d1\'c8\'c0 \'f0\'ee\'e4\'e8\'f2\'e5\'eb\'ff\'ec\'e8.\par&#13;&#10;1 \'ea\'eb\'e0\'f1\'f1 \'c0\par&#13;&#10;\b0\f1\fs17\par&#13;&#10;}&#13;&#10;"/>
+        <TextObject Name="Text26" Left="37.8" Top="66.15" Width="94.5" Height="18.9" Border.Lines="All" Text="№" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text28" Left="132.3" Top="66.15" Width="236.25" Height="18.9" Border.Lines="All" Text="ФИО родителя" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text29" Left="368.55" Top="66.15" Width="302.4" Height="18.9" Border.Lines="All" Text="Причина" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        <TextObject Name="Text30" Left="37.8" Top="85.05" Width="94.5" Height="18.9" Border.Lines="All" Text="1" HorzAlign="Center"/>
+        <TextObject Name="Text31" Left="132.3" Top="85.05" Width="236.25" Height="18.9" Border.Lines="All" HorzAlign="Center"/>
+        <TextObject Name="Text32" Left="368.55" Top="85.05" Width="302.4" Height="18.9" Border.Lines="All" HorzAlign="Center"/>
+      </DataFooterBand>
+    </DataBand>
+  </ReportPage>
+</Report>

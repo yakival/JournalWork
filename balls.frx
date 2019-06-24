@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/12/2019 02:29:27" ReportInfo.Modified="02/12/2019 23:57:11" ReportInfo.CreatorVersion="1.9.13.0">
+  <Dictionary>
+    <TableDataSource Name="Journal" ReferenceName="Data.Journal" DataType="System.Int32" Enabled="true">
+      <Column Name="Tutor" DataType="System.String"/>
+      <Column Name="Subj" DataType="System.String"/>
+      <Column Name="Class_" DataType="System.String"/>
+      <Column Name="ClassNum" DataType="System.Int32"/>
+      <Column Name="dt" DataType="System.DateTime"/>
+      <Column Name="event_" DataType="System.String"/>
+      <Column Name="kod" DataType="System.Int32"/>
+      <Column Name="Student" DataType="System.String"/>
+      <Column Name="FullEvent" DataType="System.String"/>
+    </TableDataSource>
+    <Parameter Name="Number" DataType="System.String"/>
+    <Parameter Name="Name" DataType="System.String"/>
+    <Parameter Name="dt1" DataType="System.String"/>
+    <Parameter Name="dt2" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="75.6">
+      <TextObject Name="Text12" Left="9.45" Top="9.45" Width="708.75" Height="18.9" Text="ТЕКУЩИЕ ОЦЕНКИ" HorzAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <TextObject Name="Text13" Left="9.45" Top="37.8" Width="708.75" Height="18.9" Text="за [Name] с [dt1] по [dt2]" HorzAlign="Center" Font="Arial, 14pt, style=Bold"/>
+    </ReportTitleBand>
+    <GroupHeaderBand Name="GroupHeader1" Top="78.77" Width="718.2" Height="37.8" CanGrow="true" Condition="[Journal.kod]">
+      <TextObject Name="Text1" Left="9.45" Top="9.45" Width="699.3" Height="18.9" CanGrow="true" CanShrink="true" GrowToBottom="true" CanBreak="false" Text="[Journal.FullEvent]" HorzAlign="Center" Font="Arial, 14pt, style=Bold"/>
+      <DataBand Name="Data1" Top="141.82" Width="718.2" Height="18.9" CanGrow="true" CanShrink="true" DataSource="Journal" KeepTogether="true" KeepDetail="true">
+        <TextObject Name="Text2" Left="18.9" Width="189" Height="18.9" Border.Lines="All" CanGrow="true" GrowToBottom="true" CanBreak="false" Text="[Journal.Subj]"/>
+        <TextObject Name="Text4" Left="207.9" Width="66.15" Height="18.9" Border.Lines="All" CanGrow="true" GrowToBottom="true" CanBreak="false" Text="[Journal.Class_]"/>
+        <TextObject Name="Text6" Left="274.05" Width="189" Height="18.9" Border.Lines="All" CanGrow="true" GrowToBottom="true" CanBreak="false" Text="[Journal.Tutor]"/>
+        <TextObject Name="Text8" Left="463.05" Width="94.5" Height="18.9" Border.Lines="All" CanGrow="true" GrowToBottom="true" CanBreak="false" Text="[Journal.dt]" Format="Date" Format.Format="d"/>
+        <TextObject Name="Text10" Left="557.55" Width="151.2" Height="18.9" Border.Lines="All" CanGrow="true" GrowToBottom="true" CanBreak="false" Text="[Journal.Student]"/>
+        <DataHeaderBand Name="DataHeader1" Top="119.75" Width="718.2" Height="18.9" CanGrow="true" CanShrink="true">
+          <TextObject Name="Text3" Left="18.9" Width="189" Height="18.9" Border.Lines="All" Text="Предмет" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TextObject Name="Text5" Left="207.9" Width="66.15" Height="18.9" Border.Lines="All" Text="Класс" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TextObject Name="Text7" Left="274.05" Width="189" Height="18.9" Border.Lines="All" Text="Преподаватель" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TextObject Name="Text9" Left="463.05" Width="94.5" Height="18.9" Border.Lines="All" Text="Дата" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TextObject Name="Text11" Left="557.55" Width="151.2" Height="18.9" Border.Lines="All" Text="Ученик" HorzAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </DataHeaderBand>
+        <Sort>
+          <Sort Expression="[Journal.kod]"/>
+          <Sort Expression="[Journal.ClassNum]"/>
+          <Sort Expression="[Journal.dt]"/>
+        </Sort>
+      </DataBand>
+      <GroupFooterBand Name="GroupFooter1" Top="163.89" Width="718.2" Height="37.8"/>
+    </GroupHeaderBand>
+    <PageFooterBand Name="PageFooter1" Top="204.86" Width="718.2" Height="18.9">
+      <TextObject Name="Text22" Top="4" Width="718.2" Height="18.9" Text="- [Page] -" HorzAlign="Center"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

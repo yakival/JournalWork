@@ -33,7 +33,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +40,10 @@
             this.itmFile = new System.Windows.Forms.ToolStripMenuItem();
             this.itmOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.itmOpenPlan = new System.Windows.Forms.ToolStripMenuItem();
+            this.отчётToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настроитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.показатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.справкаПоПроверкеЖурналовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -54,10 +57,13 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.planGridView = new ADGV.AdvancedDataGridView();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.goodGridView = new ADGV.AdvancedDataGridView();
+            this.goodGridView = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.shcool = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.period = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -65,12 +71,12 @@
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblPlan = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.отчётToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.настроитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.показатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iDDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tableDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tutorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.koeffDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rootCollectionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.fullNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subjectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tutorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.subjDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -82,11 +88,25 @@
             this.cntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eventDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.semestrBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.subjectBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fullNameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.commentDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fieldStatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.defDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.posResultsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.posTablesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lineBeginDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subjDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.classDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.koeffDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dt1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dt2DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rootCollectionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.planBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.event_BindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.активностьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -104,9 +124,9 @@
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rootCollectionBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.semestrBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.subjectBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.semestrBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rootCollectionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.planBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.event_BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventBindingSource)).BeginInit();
@@ -163,6 +183,39 @@
             this.itmOpenPlan.Size = new System.Drawing.Size(211, 22);
             this.itmOpenPlan.Text = "Загрузить планирования";
             this.itmOpenPlan.Click += new System.EventHandler(this.itmOpenPlan_Click);
+            // 
+            // отчётToolStripMenuItem
+            // 
+            this.отчётToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.настроитьToolStripMenuItem,
+            this.показатьToolStripMenuItem,
+            this.справкаПоПроверкеЖурналовToolStripMenuItem,
+            this.активностьToolStripMenuItem});
+            this.отчётToolStripMenuItem.Name = "отчётToolStripMenuItem";
+            this.отчётToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.отчётToolStripMenuItem.Text = "Отчёт";
+            // 
+            // настроитьToolStripMenuItem
+            // 
+            this.настроитьToolStripMenuItem.Name = "настроитьToolStripMenuItem";
+            this.настроитьToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.настроитьToolStripMenuItem.Text = "Настроить";
+            this.настроитьToolStripMenuItem.Visible = false;
+            this.настроитьToolStripMenuItem.Click += new System.EventHandler(this.настроитьToolStripMenuItem_Click);
+            // 
+            // показатьToolStripMenuItem
+            // 
+            this.показатьToolStripMenuItem.Name = "показатьToolStripMenuItem";
+            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.показатьToolStripMenuItem.Text = "Текущие оценки";
+            this.показатьToolStripMenuItem.Click += new System.EventHandler(this.показатьToolStripMenuItem_Click);
+            // 
+            // справкаПоПроверкеЖурналовToolStripMenuItem
+            // 
+            this.справкаПоПроверкеЖурналовToolStripMenuItem.Name = "справкаПоПроверкеЖурналовToolStripMenuItem";
+            this.справкаПоПроверкеЖурналовToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.справкаПоПроверкеЖурналовToolStripMenuItem.Text = "Справка по проверке журналов";
+            this.справкаПоПроверкеЖурналовToolStripMenuItem.Click += new System.EventHandler(this.справкаПоПроверкеЖурналовToolStripMenuItem_Click);
             // 
             // panel2
             // 
@@ -228,9 +281,12 @@
             this.koeffGridView.ColumnHeadersHeight = 26;
             this.koeffGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.koeffGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn1,
-            this.koeffDataGridViewTextBoxColumn});
-            this.koeffGridView.DataSource = this.rootCollectionBindingSource;
+            this.tableDataGridViewTextBoxColumn,
+            this.nameDataGridViewTextBoxColumn,
+            this.tutorDataGridViewTextBoxColumn,
+            this.koeffDataGridViewTextBoxColumn,
+            this.fullNameDataGridViewTextBoxColumn});
+            this.koeffGridView.DataSource = this.subjectBindingSource;
             this.koeffGridView.DateWithTime = false;
             this.koeffGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.koeffGridView.Location = new System.Drawing.Point(3, 3);
@@ -241,6 +297,7 @@
             this.koeffGridView.TimeFilter = false;
             this.koeffGridView.SortStringChanged += new System.EventHandler(this.koeffGridView_SortStringChanged);
             this.koeffGridView.FilterStringChanged += new System.EventHandler(this.koeffGridView_FilterStringChanged);
+            this.koeffGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.koeffGridView_CellEndEdit);
             // 
             // tabPage2
             // 
@@ -398,38 +455,39 @@
             this.goodGridView.AllowUserToAddRows = false;
             this.goodGridView.AllowUserToDeleteRows = false;
             this.goodGridView.AutoGenerateColumns = false;
-            this.goodGridView.AutoGenerateContextFilters = true;
             this.goodGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.goodGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.goodGridView.ColumnHeadersHeight = 26;
-            this.goodGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.goodGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.goodGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDDataGridViewTextBoxColumn});
+            this.iDDataGridViewTextBoxColumn,
+            this.nameDataGridViewTextBoxColumn2,
+            this.fullNameDataGridViewTextBoxColumn1,
+            this.commentDataGridViewTextBoxColumn,
+            this.fieldStatDataGridViewTextBoxColumn,
+            this.defDataGridViewTextBoxColumn,
+            this.posResultsDataGridViewTextBoxColumn,
+            this.posTablesDataGridViewTextBoxColumn,
+            this.lineBeginDataGridViewTextBoxColumn,
+            this.subjDataGridViewTextBoxColumn1,
+            this.classDataGridViewTextBoxColumn1,
+            this.koeffDataGridViewTextBoxColumn1,
+            this.dt1DataGridViewTextBoxColumn,
+            this.dt2DataGridViewTextBoxColumn});
             this.goodGridView.DataSource = this.rootCollectionBindingSource;
-            this.goodGridView.DateWithTime = false;
             this.goodGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.goodGridView.Location = new System.Drawing.Point(3, 3);
             this.goodGridView.Name = "goodGridView";
             this.goodGridView.ReadOnly = true;
-            this.goodGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.goodGridView.Size = new System.Drawing.Size(1388, 587);
-            this.goodGridView.TabIndex = 13;
-            this.goodGridView.TimeFilter = false;
-            this.goodGridView.SortStringChanged += new System.EventHandler(this.koeffGridView_SortStringChanged);
-            this.goodGridView.FilterStringChanged += new System.EventHandler(this.koeffGridView_FilterStringChanged);
+            this.goodGridView.TabIndex = 0;
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
-            this.shcool});
+            this.shcool,
+            this.toolStripSeparator1,
+            this.toolStripLabel2,
+            this.period});
             this.toolStrip1.Location = new System.Drawing.Point(3, 3);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1402, 25);
@@ -452,6 +510,22 @@
             this.shcool.Name = "shcool";
             this.shcool.Size = new System.Drawing.Size(121, 25);
             this.shcool.DropDownClosed += new System.EventHandler(this.shcool_SelectedIndexChanged);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(113, 22);
+            this.toolStripLabel2.Text = "Период для отчёта:";
+            // 
+            // period
+            // 
+            this.period.Name = "period";
+            this.period.Size = new System.Drawing.Size(121, 25);
             // 
             // statusStrip1
             // 
@@ -516,48 +590,53 @@
             this.toolStripContainer1.TabIndex = 12;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
-            // отчётToolStripMenuItem
+            // tableDataGridViewTextBoxColumn
             // 
-            this.отчётToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.настроитьToolStripMenuItem,
-            this.показатьToolStripMenuItem});
-            this.отчётToolStripMenuItem.Name = "отчётToolStripMenuItem";
-            this.отчётToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
-            this.отчётToolStripMenuItem.Text = "Отчёт";
+            this.tableDataGridViewTextBoxColumn.DataPropertyName = "Table";
+            this.tableDataGridViewTextBoxColumn.HeaderText = "Table";
+            this.tableDataGridViewTextBoxColumn.MinimumWidth = 22;
+            this.tableDataGridViewTextBoxColumn.Name = "tableDataGridViewTextBoxColumn";
+            this.tableDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.tableDataGridViewTextBoxColumn.Visible = false;
             // 
-            // настроитьToolStripMenuItem
+            // nameDataGridViewTextBoxColumn
             // 
-            this.настроитьToolStripMenuItem.Name = "настроитьToolStripMenuItem";
-            this.настроитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-            this.настроитьToolStripMenuItem.Text = "Настроить";
-            this.настроитьToolStripMenuItem.Click += new System.EventHandler(this.настроитьToolStripMenuItem_Click);
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Предмет";
+            this.nameDataGridViewTextBoxColumn.MinimumWidth = 22;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // показатьToolStripMenuItem
+            // tutorDataGridViewTextBoxColumn
             // 
-            this.показатьToolStripMenuItem.Name = "показатьToolStripMenuItem";
-            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-            this.показатьToolStripMenuItem.Text = "Показать";
-            this.показатьToolStripMenuItem.Click += new System.EventHandler(this.показатьToolStripMenuItem_Click);
-            // 
-            // iDDataGridViewTextBoxColumn1
-            // 
-            this.iDDataGridViewTextBoxColumn1.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn1.HeaderText = "Предмет";
-            this.iDDataGridViewTextBoxColumn1.MinimumWidth = 22;
-            this.iDDataGridViewTextBoxColumn1.Name = "iDDataGridViewTextBoxColumn1";
-            this.iDDataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.tutorDataGridViewTextBoxColumn.DataPropertyName = "Tutor";
+            this.tutorDataGridViewTextBoxColumn.HeaderText = "Tutor";
+            this.tutorDataGridViewTextBoxColumn.MinimumWidth = 22;
+            this.tutorDataGridViewTextBoxColumn.Name = "tutorDataGridViewTextBoxColumn";
+            this.tutorDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.tutorDataGridViewTextBoxColumn.Visible = false;
             // 
             // koeffDataGridViewTextBoxColumn
             // 
-            this.koeffDataGridViewTextBoxColumn.DataPropertyName = "Koeff";
+            this.koeffDataGridViewTextBoxColumn.DataPropertyName = "koeff";
             this.koeffDataGridViewTextBoxColumn.HeaderText = "Коэффициент (редактирование)";
             this.koeffDataGridViewTextBoxColumn.MinimumWidth = 22;
             this.koeffDataGridViewTextBoxColumn.Name = "koeffDataGridViewTextBoxColumn";
             this.koeffDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // rootCollectionBindingSource
+            // fullNameDataGridViewTextBoxColumn
             // 
-            this.rootCollectionBindingSource.DataSource = typeof(JournalWork.RootCollection);
+            this.fullNameDataGridViewTextBoxColumn.DataPropertyName = "FullName";
+            this.fullNameDataGridViewTextBoxColumn.HeaderText = "FullName";
+            this.fullNameDataGridViewTextBoxColumn.MinimumWidth = 22;
+            this.fullNameDataGridViewTextBoxColumn.Name = "fullNameDataGridViewTextBoxColumn";
+            this.fullNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.fullNameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.fullNameDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // subjectBindingSource
+            // 
+            this.subjectBindingSource.DataSource = typeof(JournalWork.Subject);
             // 
             // nameDataGridViewTextBoxColumn1
             // 
@@ -616,7 +695,7 @@
             // 
             // avgDataGridViewTextBoxColumn
             // 
-            this.avgDataGridViewTextBoxColumn.DataPropertyName = "avg";
+            this.avgDataGridViewTextBoxColumn.DataPropertyName = "avg_str";
             this.avgDataGridViewTextBoxColumn.HeaderText = "Средний балл";
             this.avgDataGridViewTextBoxColumn.MinimumWidth = 22;
             this.avgDataGridViewTextBoxColumn.Name = "avgDataGridViewTextBoxColumn";
@@ -654,9 +733,120 @@
             // 
             this.semestrBindingSource.DataSource = typeof(JournalWork.Semestr_);
             // 
-            // subjectBindingSource
+            // iDDataGridViewTextBoxColumn
             // 
-            this.subjectBindingSource.DataSource = typeof(JournalWork.Subject);
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // nameDataGridViewTextBoxColumn2
+            // 
+            this.nameDataGridViewTextBoxColumn2.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn2.HeaderText = "Учитель";
+            this.nameDataGridViewTextBoxColumn2.Name = "nameDataGridViewTextBoxColumn2";
+            this.nameDataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // fullNameDataGridViewTextBoxColumn1
+            // 
+            this.fullNameDataGridViewTextBoxColumn1.DataPropertyName = "FullName";
+            this.fullNameDataGridViewTextBoxColumn1.HeaderText = "FullName";
+            this.fullNameDataGridViewTextBoxColumn1.Name = "fullNameDataGridViewTextBoxColumn1";
+            this.fullNameDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.fullNameDataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // commentDataGridViewTextBoxColumn
+            // 
+            this.commentDataGridViewTextBoxColumn.DataPropertyName = "Comment";
+            this.commentDataGridViewTextBoxColumn.HeaderText = "Comment";
+            this.commentDataGridViewTextBoxColumn.Name = "commentDataGridViewTextBoxColumn";
+            this.commentDataGridViewTextBoxColumn.ReadOnly = true;
+            this.commentDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // fieldStatDataGridViewTextBoxColumn
+            // 
+            this.fieldStatDataGridViewTextBoxColumn.DataPropertyName = "FieldStat";
+            this.fieldStatDataGridViewTextBoxColumn.HeaderText = "FieldStat";
+            this.fieldStatDataGridViewTextBoxColumn.Name = "fieldStatDataGridViewTextBoxColumn";
+            this.fieldStatDataGridViewTextBoxColumn.ReadOnly = true;
+            this.fieldStatDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // defDataGridViewTextBoxColumn
+            // 
+            this.defDataGridViewTextBoxColumn.DataPropertyName = "def";
+            this.defDataGridViewTextBoxColumn.HeaderText = "def";
+            this.defDataGridViewTextBoxColumn.Name = "defDataGridViewTextBoxColumn";
+            this.defDataGridViewTextBoxColumn.ReadOnly = true;
+            this.defDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // posResultsDataGridViewTextBoxColumn
+            // 
+            this.posResultsDataGridViewTextBoxColumn.DataPropertyName = "posResults";
+            this.posResultsDataGridViewTextBoxColumn.HeaderText = "posResults";
+            this.posResultsDataGridViewTextBoxColumn.Name = "posResultsDataGridViewTextBoxColumn";
+            this.posResultsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.posResultsDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // posTablesDataGridViewTextBoxColumn
+            // 
+            this.posTablesDataGridViewTextBoxColumn.DataPropertyName = "posTables";
+            this.posTablesDataGridViewTextBoxColumn.HeaderText = "posTables";
+            this.posTablesDataGridViewTextBoxColumn.Name = "posTablesDataGridViewTextBoxColumn";
+            this.posTablesDataGridViewTextBoxColumn.ReadOnly = true;
+            this.posTablesDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // lineBeginDataGridViewTextBoxColumn
+            // 
+            this.lineBeginDataGridViewTextBoxColumn.DataPropertyName = "lineBegin";
+            this.lineBeginDataGridViewTextBoxColumn.HeaderText = "lineBegin";
+            this.lineBeginDataGridViewTextBoxColumn.Name = "lineBeginDataGridViewTextBoxColumn";
+            this.lineBeginDataGridViewTextBoxColumn.ReadOnly = true;
+            this.lineBeginDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // subjDataGridViewTextBoxColumn1
+            // 
+            this.subjDataGridViewTextBoxColumn1.DataPropertyName = "Subj";
+            this.subjDataGridViewTextBoxColumn1.HeaderText = "Subj";
+            this.subjDataGridViewTextBoxColumn1.Name = "subjDataGridViewTextBoxColumn1";
+            this.subjDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.subjDataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // classDataGridViewTextBoxColumn1
+            // 
+            this.classDataGridViewTextBoxColumn1.DataPropertyName = "Class_";
+            this.classDataGridViewTextBoxColumn1.HeaderText = "Class_";
+            this.classDataGridViewTextBoxColumn1.Name = "classDataGridViewTextBoxColumn1";
+            this.classDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.classDataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // koeffDataGridViewTextBoxColumn1
+            // 
+            this.koeffDataGridViewTextBoxColumn1.DataPropertyName = "Koeff";
+            this.koeffDataGridViewTextBoxColumn1.HeaderText = "Koeff";
+            this.koeffDataGridViewTextBoxColumn1.Name = "koeffDataGridViewTextBoxColumn1";
+            this.koeffDataGridViewTextBoxColumn1.ReadOnly = true;
+            this.koeffDataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // dt1DataGridViewTextBoxColumn
+            // 
+            this.dt1DataGridViewTextBoxColumn.DataPropertyName = "dt1";
+            this.dt1DataGridViewTextBoxColumn.HeaderText = "dt1";
+            this.dt1DataGridViewTextBoxColumn.Name = "dt1DataGridViewTextBoxColumn";
+            this.dt1DataGridViewTextBoxColumn.ReadOnly = true;
+            this.dt1DataGridViewTextBoxColumn.Visible = false;
+            // 
+            // dt2DataGridViewTextBoxColumn
+            // 
+            this.dt2DataGridViewTextBoxColumn.DataPropertyName = "dt2";
+            this.dt2DataGridViewTextBoxColumn.HeaderText = "dt2";
+            this.dt2DataGridViewTextBoxColumn.Name = "dt2DataGridViewTextBoxColumn";
+            this.dt2DataGridViewTextBoxColumn.ReadOnly = true;
+            this.dt2DataGridViewTextBoxColumn.Visible = false;
+            // 
+            // rootCollectionBindingSource
+            // 
+            this.rootCollectionBindingSource.DataSource = typeof(JournalWork.RootCollection);
             // 
             // planBindingSource
             // 
@@ -670,14 +860,12 @@
             // 
             this.eventBindingSource.DataSource = typeof(JournalWork.Event_);
             // 
-            // iDDataGridViewTextBoxColumn
+            // активностьToolStripMenuItem
             // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "Учитель";
-            this.iDDataGridViewTextBoxColumn.MinimumWidth = 22;
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.iDDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.активностьToolStripMenuItem.Name = "активностьToolStripMenuItem";
+            this.активностьToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.активностьToolStripMenuItem.Text = "Активность учащихся и родителей";
+            this.активностьToolStripMenuItem.Click += new System.EventHandler(this.активностьToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -714,9 +902,9 @@
             this.statusStrip1.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rootCollectionBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.semestrBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.subjectBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.semestrBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rootCollectionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.planBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.event_BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventBindingSource)).EndInit();
@@ -757,6 +945,17 @@
         private ADGV.AdvancedDataGridView dataGridView1;
         private System.Windows.Forms.TabPage tabPage3;
         private ADGV.AdvancedDataGridView semestrGridView;
+        private System.Windows.Forms.TabPage tabPage4;
+        private ADGV.AdvancedDataGridView planGridView;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.BindingSource rootCollectionBindingSource;
+        private System.Windows.Forms.ToolStripMenuItem отчётToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem настроитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem показатьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripComboBox period;
+        private System.Windows.Forms.ToolStripMenuItem справкаПоПроверкеЖурналовToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn tutorDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn subjDataGridViewTextBoxColumn;
@@ -768,17 +967,27 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cntDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn skip;
         private System.Windows.Forms.DataGridViewTextBoxColumn eventDataGridViewTextBoxColumn;
-        private System.Windows.Forms.TabPage tabPage4;
-        private ADGV.AdvancedDataGridView planGridView;
-        private System.Windows.Forms.TabPage tabPage5;
-        private ADGV.AdvancedDataGridView goodGridView;
-        private System.Windows.Forms.BindingSource rootCollectionBindingSource;
-        private System.Windows.Forms.ToolStripMenuItem отчётToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem настроитьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem показатьToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn tableDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn tutorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn koeffDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fullNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridView goodGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fullNameDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn commentDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fieldStatDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn defDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn posResultsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn posTablesDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lineBeginDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn subjDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn classDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn koeffDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dt1DataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dt2DataGridViewTextBoxColumn;
+        private System.Windows.Forms.ToolStripMenuItem активностьToolStripMenuItem;
     }
 }
 

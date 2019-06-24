@@ -1,10 +1,6 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Data;
-using System.Net;
-using System.Web;
-using System.Configuration;
 
 
 namespace JournalWork
@@ -158,7 +154,21 @@ namespace JournalWork
         public int posTables { get; set; }
         public int lineBegin { get; set; }
         public string Subj { get; set; }
+        public string Class_ { get; set; }
+        public int ClassNum { get; set; }
         public double Koeff { get; set; }
+        public DateTime dt1 { get; set; }
+        public DateTime dt2 { get; set; }
+        public int inputTutor { get; set; }
+        public int inputStudent { get; set; }
+        public int inputFamily { get; set; }
+        public int countTutor { get; set; }
+        public int countStudent { get; set; }
+        public int countFamily { get; set; }
+        public int countTutorFree { get; set; }
+        public int countStudentFree { get; set; }
+        public int countFamilyFree { get; set; }
+        public int tot { get; set; }
 
         public ItemRoot()
         {
@@ -171,6 +181,20 @@ namespace JournalWork
             posTables = 0;
             lineBegin = 0;
             Koeff = 0;
+            dt1 = new DateTime(1800, 1, 1);
+            dt2 = new DateTime(1800, 1, 1);
+            Class_ = "";
+            inputTutor = 0;
+            inputStudent = 0;
+            inputFamily = 0;
+            countFamily = 0;
+            countFamilyFree = 0;
+            countStudent = 0;
+            countStudentFree = 0;
+            countTutor = 0;
+            countTutorFree = 0;
+            tot = 0;
+            ClassNum = 0;
         }
 
         public bool Fill(string aID, string aName, string aFullName)

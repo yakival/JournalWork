@@ -9,10 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ADGV;
 using FastReport;
+using System.Xml.Serialization;
 
 namespace JournalWork
 {
@@ -26,11 +26,16 @@ namespace JournalWork
         public List<Event_> dsEvent;
         public List<Semestr_> dsSemestr;
         public List<Plan> dsPlan;
+        public List<Params> dsPParams;
+        public List<Tutor> dsTutor;
         public double Koeff;
         public RootCollection good = new RootCollection();
         public RootCollection subj_ = new RootCollection();
+        public RootCollection lstSemestr = new RootCollection();
         public List<RootCollection> listLession = new List<RootCollection>();
         public int totJournal = 0, cntJournal = 0, totPlan = 0, cntPlan = 0;
+        private string repYear = "";
+        XmlSerializer serializer;
 
         public Form1()
         {
@@ -48,6 +53,8 @@ namespace JournalWork
             dsSemestr.Clear();
             dsPlan = new List<Plan>();
             dsPlan.Clear();
+            dsTutor = new List<Tutor>();
+            dsTutor.Clear();
 
             shcool.SelectedIndex = 0;
 
@@ -58,6 +65,8 @@ namespace JournalWork
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (col.Name == "ClassNum") col.Visible = false;
+                if (col.Name == "kod") col.Visible = false;
+                if (col.Name == "FullEvent") col.Visible = false;
                 if (col.Name == "Tutor") col.HeaderText = "Учитель";
                 if (col.Name == "Subj") col.HeaderText = "Предмет";
                 if (col.Name == "Class_") col.HeaderText = "Класс";
@@ -73,6 +82,8 @@ namespace JournalWork
             foreach (DataGridViewColumn col in planGridView.Columns)
             {
                 if (col.Name == "ClassNum") col.Visible = false;
+                if (col.Name == "kod") col.Visible = false;
+                if (col.Name == "FullEvent") col.Visible = false;
                 if (col.Name == "Tutor") col.HeaderText = "Учитель";
                 if (col.Name == "Subj") col.HeaderText = "Предмет";
                 if (col.Name == "Class_") col.HeaderText = "Класс";
@@ -84,6 +95,8 @@ namespace JournalWork
             tbl = ToDataTable(dsSemestr);
             semestrGridView.DataSource = tbl;
 
+            itmOpenPlan.Enabled = false;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -92,14 +105,30 @@ namespace JournalWork
 
         private void openToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            ///////////////////////////////////////////////////////////////////////
+            // Загружаем сохранённые коэффициенты
+            ///////////////////////////////////////////////////////////////////////
             dsSubject.Clear();
+            subj_.Clear();
+            if (File.Exists("subject.xml"))
+            {
+                serializer = new XmlSerializer(typeof(List<Subject>));
+                using (FileStream stream = File.OpenRead("subject.xml"))
+                {
+                    dsSubject = (List<Subject>)serializer.Deserialize(stream);
+                }
+                foreach (Subject sb in dsSubject)
+                {
+                    subj_.Add(new ItemRoot { ID = sb.Name, Koeff = sb.koeff });
+                }
+            }
+            ///////////////////////////////////////////////////////////////////////
+
             dsSemestr.Clear();
+            dsTutor.Clear();
             toolStripProgressBar1.Value = 0;
             dsEvent.Clear();
             good.Clear();
-            subj_.Clear();
-
-            Koeff = 0.5;// TConvert.ToDouble(txtKoeff.Text);
 
             // Выбор архива
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -137,12 +166,37 @@ namespace JournalWork
                 this.Cursor = Cursors.Default;
             }
 
-            //DataTable tbl = ToDataTable(dsSubject);
-            koeffGridView.DataSource = subj_;
+            // Убираем пустые триместры
+            for (var i=lstSemestr.Count-1; i>=0; i--)
+            {
+                if (lstSemestr[i].dt2 == TConvert.ToDateTime("01.01.1800")) lstSemestr.Remove(lstSemestr.GetIndex(lstSemestr[i].ID));
+            }
+            period.Items.Clear();
+            foreach(ItemRoot r in lstSemestr) { period.Items.Add(r.ID); }
+            if (period.Items.Count > 0) period.SelectedIndex = 0;
 
-            DataTable tbl = ToDataTable(dsSemestr);
+            dsSubject.Clear();
+            foreach (ItemRoot ir in subj_) dsSubject.Add(new Subject { Name = ir.ID, koeff = ir.Koeff });
+            DataTable tbl = ToDataTable(dsSubject);
+            koeffGridView.DataSource = tbl;
+            koeffGridView.ClearFilter();
+            koeffGridView.Refresh();
+
+            ///////////////////////////////////////////////////////////////////////
+            // Сохраняем коэффициенты
+            ///////////////////////////////////////////////////////////////////////
+            serializer = new XmlSerializer(typeof(List<Subject>));
+            using (FileStream stream = File.OpenWrite("subject.xml"))
+            {
+                serializer.Serialize(stream, dsSubject);
+            }
+            ///////////////////////////////////////////////////////////////////////
+
+            tbl = ToDataTable(dsSemestr);
             semestrGridView.DataSource = tbl;
+            semestrGridView.ClearFilter();
 
+            for (int i = good.Count - 1; i >= 0; i--) if (good[i].def == "1") good.Remove(good.GetIndex(good[i].ID));
             goodGridView.DataSource = good;
 
             tbl = ToDataTable(dsEvent);
@@ -153,6 +207,8 @@ namespace JournalWork
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (col.Name == "ClassNum") col.Visible = false;
+                if (col.Name == "kod") col.Visible = false;
+                if (col.Name == "FullEvent") col.Visible = false;
                 if (col.Name == "Tutor") col.HeaderText = "Учитель";
                 if (col.Name == "Subj") col.HeaderText = "Предмет";
                 if (col.Name == "Class_") col.HeaderText = "Класс";
@@ -160,8 +216,11 @@ namespace JournalWork
                 if (col.Name == "event_") col.HeaderText = "Ошибка";
                 if (col.Name == "Student") col.HeaderText = "Ученик";
             }
+            dataGridView1.ClearFilter();
 
             toolStripProgressBar1.Value = 0;
+
+            itmOpenPlan.Enabled = dsEvent.Count > 0;
         }
 
         private void shcool_SelectedIndexChanged(object sender, EventArgs e)
@@ -173,6 +232,21 @@ namespace JournalWork
                 if (shcool.SelectedIndex == 2) filter += " ((ClassNum > 4) AND (ClassNum < 10)) ";
                 if (shcool.SelectedIndex == 3) filter += " ClassNum > 9 ";
             }
+            period.Items.Clear();
+            foreach (ItemRoot r in lstSemestr)
+            {
+                if (shcool.SelectedIndex == 0)
+                {
+                    period.Items.Add(r.ID);
+                }
+                else
+                {
+                    var s = "ТР";
+                    if (shcool.SelectedIndex == 3) s = "СЕМ";
+                    if (r.ID.IndexOf(s) != -1) period.Items.Add(r.ID);
+                }
+            }
+            period.SelectedIndex = 0;
 
             DataTable tbl = ToDataTable(dsEvent);
             tbl.DefaultView.Sort = "Class_, Subj, dt";
@@ -183,6 +257,8 @@ namespace JournalWork
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (col.Name == "ClassNum") col.Visible = false;
+                if (col.Name == "kod") col.Visible = false;
+                if (col.Name == "FullEvent") col.Visible = false;
                 if (col.Name == "Tutor") col.HeaderText = "Учитель";
                 if (col.Name == "Subj") col.HeaderText = "Предмет";
                 if (col.Name == "Class_") col.HeaderText = "Класс";
@@ -201,6 +277,8 @@ namespace JournalWork
             foreach (DataGridViewColumn col in planGridView.Columns)
             {
                 if (col.Name == "ClassNum") col.Visible = false;
+                if (col.Name == "kod") col.Visible = false;
+                if (col.Name == "FullEvent") col.Visible = false;
                 if (col.Name == "Tutor") col.HeaderText = "Учитель";
                 if (col.Name == "Subj") col.HeaderText = "Предмет";
                 if (col.Name == "Class_") col.HeaderText = "Класс";
@@ -243,13 +321,16 @@ namespace JournalWork
                 int pos = 0;
                 int ClassNum = 0;
                 int firstTrimestr = -1;
-                int sumTrimestr = -1;
-                int cntTrimestr = 0;
+                int sumTrimestr = -1;   // Cумма оценок по триместрам/семестрам
+                int cntTrimestr = 0;    // Количество оценок за триместр
+                int sumYear = 0;       // Cумма оценок триместров/семестров
+                int cntYear = 0;        // Количество оценок триместров/семестров
                 int cntTrimestrNone = 0;    // Количество пропущенных уроков
                 int cntTrimestrAll = 0;     // Общее количество уроков
                 bool isErrors = false;
                 string str0 = "", str1 = "", str2 = "", str3 = "", class_ = "", subj = "", tutorName = "", year = "";
                 string[] mTutor = null;
+                string prefSem = "";
                 List<string> mTutor_ = new List<string>();
 
                 totJournal++;
@@ -272,6 +353,7 @@ namespace JournalWork
                             if (str.ToUpper().IndexOf("ГОД") != -1)
                             {
                                 str1 = dr[1][0].ToString().Split(':')[1].Split('/')[0];
+                                repYear = dr[1][0].ToString(); repYear = repYear.Replace("/", "-");
                                 year = str1;
                             }
                             if (str.ToUpper().IndexOf("ПРЕДМЕТ") != -1)
@@ -288,10 +370,14 @@ namespace JournalWork
                                 foreach (string s in mTutor)
                                 {
                                     string[] mFio = s.Trim().Split(' ');
-                                    string one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
-                                    mTutor_.Add(one);
-                                    tutorName += ((tutorName != "") ? ", " : "") + one;
+                                    string one = mFio[0];
+                                    if(mFio.Length==3)
+                                        one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
+                                    //mTutor_.Add(one);
+                                    //tutorName += ((tutorName != "") ? ", " : "") + one;
+                                    tutorName = one;
                                 }
+                                mTutor_.Add(tutorName);
                             }
                             pos++;
                             if (pos == dr.Length) break;
@@ -302,20 +388,29 @@ namespace JournalWork
                 }
                 if (pos >= dr.Length)
                     continue;
-                dsSubject.Add(new Subject { Name = subj, Tutor = tutorName, Table = tbl.TableName, koeff = 0.5 });
-                // Добавляем список преподавателей
-                foreach (string s in mTutor_)
-                {
-                    if (good.getByID(s) == null) good.Add(new ItemRoot { ID = s });
-                }
-                // Добавляем предметы
-                if (subj_.getByID(subj) == null)
-                {
-                    subj_.Add(new ItemRoot { ID = subj, Koeff = 0.5 });
-                }
-
                 if (ClassNum > 1)
                 {
+                    if ((ClassNum == 4) && (subj.ToLower().IndexOf("основы светской этики") != -1))
+                        continue;
+                    // Добавляем список преподавателей
+                    foreach (string s in mTutor_)
+                    {
+                        if (good.getByID(s) == null)
+                        {
+                            good.Add(new ItemRoot { ID = s });
+                        }
+                        dsTutor.Add(new Tutor { Name = s, ClassNum = ClassNum, Class_ = class_ });
+                    }
+                    // Добавляем предметы
+                    ItemRoot fndSubj = subj_.getByID(subj);
+                    if (fndSubj == null)
+                    {
+                        fndSubj = new ItemRoot { ID = subj, Koeff = 0.5 };
+                        subj_.Add(fndSubj);
+                    }
+                    // Фиксируем округление
+                    Koeff = fndSubj.Koeff;
+
                     cntJournal++;
                     //Определяем даты занятий 
                     RootCollection rc = new RootCollection();
@@ -327,6 +422,11 @@ namespace JournalWork
                     int oldDay = 0;
                     int cntDay = 0;
                     string sdt = "";
+                    // Подготовка списка триместров/семестров
+                    if (ClassNum < 10) prefSem = " ТР"; else prefSem = " СЕМ";
+                    ItemRoot item = lstSemestr.getByID("1" + prefSem);
+                    if (item == null) lstSemestr.Add(item = new ItemRoot { ID = "1" + prefSem, posResults = 1, dt1 = DateTime.Now });
+                    // Читаем даты занятий
                     for (int i = 2; i < r0.ItemArray.Length; i++)
                     {
                         if (TConvert.ToString(r0[i]) != "")
@@ -336,56 +436,112 @@ namespace JournalWork
                             {
                                 rct.Add(new ItemRoot { ID = i.ToString(), def = TConvert.ToString(r0[i]).ToUpper(), FullName = str0, Comment = tblName, FieldStat = str3 });
                                 rc[rc.Count - 1].FullName = "1";
+
+                                // Проставляем дату окончания триместра/семестра и заводим новый
+                                int posResults = item.posResults;
+                                item = lstSemestr.getByID((item.posResults + 1).ToString() + prefSem);
+                                if (item == null) lstSemestr.Add(item = new ItemRoot { ID = (posResults + 1).ToString() + prefSem, posResults = posResults + 1, dt1 = DateTime.Now });
+
                                 isSemestr = true;
                                 firstTrimestr = -1;
                             }
                             else
                             {
-                                if ((month_ < currMonth) && (month_ != -1))
+                                if (TConvert.ToString(r0[i]).ToUpper().IndexOf("ГОД") != -1)
                                 {
-                                    year = (TConvert.ToInt(year) + 1).ToString();
+                                    rct.Add(new ItemRoot { ID = i.ToString(), def = TConvert.ToString(r0[i]).ToUpper(), FullName = str0, Comment = tblName, FieldStat = str3 });
                                 }
-                                if (month_ != -1)
+                                else
                                 {
-                                    if (firstTrimestr == -1) firstTrimestr = i;
+                                    if ((month_ < currMonth) && (month_ != -1))
+                                    {
+                                        year = (TConvert.ToInt(year) + 1).ToString();
+                                    }
+                                    if (month_ != -1)
+                                    {
+                                        if (firstTrimestr == -1) firstTrimestr = i;
+                                    }
+                                    currMonth = month_;
+                                    isSemestr = false;
                                 }
-                                currMonth = month_;
-                                isSemestr = false;
                             }
                             month_ = getMonth(TConvert.ToString(r0[i]));
                         }
-                        if ((currMonth != -1)&&(!isSemestr))
+                        if ((currMonth != -1) && (!isSemestr))
                         {
                             int newDay = TConvert.ToInt(dr[7][i]);
                             if ((oldDay == 0)) oldDay = newDay;
                             if (oldDay != newDay)
                             {
+                                //if ((sdt == "3.12.2018") && (class_.Trim() == "2б")){
+                                //}
                                 if ((cntDay > 0) && (cntDay < 3))
                                 {
-                                    dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(sdt), event_ = "Низкая накопляемость оценок" });
-                                    isErrors = true;
+                                    if (TConvert.ToDateTime(sdt) <= currDT)
+                                    {
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = TConvert.ToDateTime(sdt),
+                                            event_ = "Низкая накопляемость оценок",
+                                            kod = 2
+                                        });
+                                        isErrors = true;
+                                    }else
+                                    {
+
+                                    }
                                 }
                                 if (cntDay == 0)
                                 {
-                                    dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(String.Format("{0}.{1}.{2}", dr[7][i].ToString(), (currMonth + 1).ToString(), year)), event_ = "Несвоевременное выставление оценки" });
-                                    isErrors = true;
+                                    if (TConvert.ToDateTime(sdt) <= currDT)
+                                    {
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = TConvert.ToDateTime(sdt),
+                                            event_ = "Несвоевременное выставление оценки",
+                                            kod = 3
+                                        });
+                                        isErrors = true;
+                                    }else
+                                    {
+
+                                    }
                                 }
                                 cntDay = 0;
+                                oldDay = newDay;
                             }
 
                             sdt = String.Format("{0}.{1}.{2}", newDay, currMonth + 1, TConvert.ToInt(year));
+                            // Заполняем границы триместра
+                            DateTime dSem = TConvert.ToDateTime(sdt);
+                            if (item.dt1 > dSem) item.dt1 = dSem;
+                            if (item.dt2 < dSem) item.dt2 = dSem;
+
                             if ((year == currDT.Year.ToString()) && (currMonth + 1 == currDT.Month))
-                                if (TConvert.ToDateTime(sdt) > currDT)
+                                if (dSem > currDT)
                                     break;
+                            // Заполняем границы триместра
+                            if (item.dt1 > dSem) item.dt1 = dSem;
+                            if (item.dt2 < dSem) item.dt2 = dSem;
+                            // Добаляем занятие
                             rc.Add(new ItemRoot
                             {
                                 ID = sdt,
                                 def = i.ToString(),
                                 Name = (firstTrimestr > 0) ? "1" : "",
-                                FullName = str0,
+                                FullName = "",
                                 Comment = tblName,
                                 FieldStat = tutorName,
                                 Subj = str2,
+                                Class_ = str0,
                                 posResults = mResult.Count - 1,
                                 posTables = posTable,
                                 lineBegin = pos + 3
@@ -414,7 +570,17 @@ namespace JournalWork
                                 {
                                     if (cell.Length > 1)
                                     {
-                                        dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(sdt), event_ = "Не правильное оформление отсутствия на уроке" });
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = TConvert.ToDateTime(sdt),
+                                            Student = dr[j][1].ToString().Split('.')[0] + ".",
+                                            event_ = "Не правильное оформление отсутствия на уроке",
+                                            kod = 4
+                                        });
                                         isErrors = true;
                                     }
                                 }
@@ -424,11 +590,13 @@ namespace JournalWork
                     }
                     listLession.Add(rc);
 
-                    for (int j = pos+3; j < dr.Length; j++)
+                    // Сканируем состояние по ученикам
+                    for (int j = pos + 3; j < dr.Length; j++)
                     {
                         bool isN = false, is2 = false;
                         int cnt2 = 0;
 
+                        string Student = dr[j][1].ToString().Split('.')[0] + ".";
                         for (int i = 0; i < rc.Count; i++)
                         {
                             string cell = dr[j][TConvert.ToInt(rc[i].def)].ToString();
@@ -444,7 +612,10 @@ namespace JournalWork
                             }
                             cntTrimestrAll++;
                             if ((cell.ToUpper().IndexOf("Н") != -1) || (cell.ToUpper().IndexOf("Б") != -1) || (cell.ToUpper().IndexOf("П") != -1) || (cell.ToUpper().IndexOf("О") != -1)) cntTrimestrNone++;
-                            if (cell.ToUpper().IndexOf("Н") != -1) isN = true;
+                            if (cell.ToUpper().IndexOf("Н") != -1)
+                            {
+                                isN = true;
+                            }
                             else
                             {
                                 ////////////////////////////////////////////////////////////////
@@ -465,7 +636,17 @@ namespace JournalWork
                                 ////////////////////////////////////////////////////////////////
                                 if (isN && (cell.IndexOf("2") != -1))
                                 {
-                                    dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(rc[i].ID), event_ = "После отсутствия на занятии поставлена оценка 2", Student = dr[j][1].ToString() });
+                                    dsEvent.Add(new Event_
+                                    {
+                                        Tutor = tutorName,
+                                        Subj = subj,
+                                        Class_ = class_,
+                                        ClassNum = ClassNum,
+                                        dt = TConvert.ToDateTime(rc[i].ID),
+                                        event_ = "После отсутствия на занятии поставлена оценка 2",
+                                        Student = Student,
+                                        kod = 7
+                                    });
                                     isErrors = true;
                                 }
                                 isN = false;
@@ -476,12 +657,32 @@ namespace JournalWork
                                 {
                                     if (rc[i].Name == "1")
                                     {
-                                        dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(rc[i].ID), event_ = "Оценка 2 в начале триместра(семестра)", Student = dr[j][1].ToString() });
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = TConvert.ToDateTime(rc[i].ID),
+                                            event_ = "Оценка 2 в начале или конце триместра(семестра)",
+                                            Student = Student,
+                                            kod = 6
+                                        });
                                         isErrors = true;
                                     }
                                     if (rc[i].FullName == "1")
                                     {
-                                        dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = TConvert.ToDateTime(rc[i].ID), event_ = "Оценка 2 в конце триместра(семестра)", Student = dr[j][1].ToString() });
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = TConvert.ToDateTime(rc[i].ID),
+                                            event_ = "Оценка 2 в начале или конце триместра(семестра)",
+                                            Student = Student,
+                                            kod = 6
+                                        });
                                         isErrors = true;
                                     }
                                 }
@@ -498,7 +699,17 @@ namespace JournalWork
                                     }
                                     if (cnt2 == 3)
                                     {
-                                        dsEvent.Add(new Event_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, dt = dt2, event_ = "Оценка 2 не исправлена за 3 занятия", Student = dr[j][1].ToString() });
+                                        dsEvent.Add(new Event_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            dt = dt2,
+                                            event_ = "Оценка 2 не исправлена за 3 занятия",
+                                            Student = Student,
+                                            kod = 5
+                                        });
                                         isErrors = true;
                                         is2 = false;
                                     }
@@ -513,6 +724,10 @@ namespace JournalWork
                                 int valitog = TConvert.ToInt(Regex.Replace(TConvert.ToString(dr[j][TConvert.ToInt(rc[i].def) + 1]), "[^0-9]", ""));
                                 if (valitog > 0)
                                 {
+                                    // Считаем годовую оценку
+                                    sumYear += valitog;
+                                    cntYear++;
+
                                     ItemRoot ir = rct.getByID((TConvert.ToInt(rc[i].def) + 1).ToString());
                                     ////////////////////////////////////////////////////////////////
                                     // Проверяем средний балл за семестр/триместр
@@ -522,11 +737,24 @@ namespace JournalWork
                                         double calc = (cntTrimestr != 0) ? TConvert.ToDouble(sumTrimestr) / TConvert.ToDouble(cntTrimestr) : 0;
                                         // Округляем
                                         int num = (int)calc;
-                                        double fract = calc - num;
+                                        double fract = calc - num + 0.001;
                                         if (fract >= Koeff) num++;
                                         if (num != valitog)
                                         {
-                                            dsSemestr.Add(new Semestr_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, Name = ir.def, event_ = "Не верный средний бал", Student = dr[j][1].ToString(), avg = calc, ball = valitog });
+                                            dsSemestr.Add(new Semestr_
+                                            {
+                                                Tutor = tutorName,
+                                                Subj = subj,
+                                                Class_ = class_,
+                                                ClassNum = ClassNum,
+                                                Name = ir.def,
+                                                event_ = "Не верный средний бал",
+                                                Student = Student,
+                                                avg = calc,
+                                                ball = valitog,
+                                                cnt = cntTrimestr.ToString(),
+                                                kod = 1
+                                            });
                                             isErrors = true;
                                         }
                                     }
@@ -536,7 +764,20 @@ namespace JournalWork
                                     if (((cntTrimestr < 3) && (ir.def.ToUpper().IndexOf("ТР") != -1)) || ((cntTrimestr < 5) && (ir.def.ToUpper().IndexOf("СЕМ") != -1)))
                                     {
                                         double calc = (cntTrimestr != 0) ? TConvert.ToDouble(sumTrimestr) / TConvert.ToDouble(cntTrimestr) : 0;
-                                        dsSemestr.Add(new Semestr_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, Name = ir.def, event_ = "Итоговая оценка выставлена менее, чем порог(3ТР, 5СЕМ)", Student = dr[j][1].ToString(), avg = calc, ball = valitog, cnt = cntTrimestr.ToString() });
+                                        dsSemestr.Add(new Semestr_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            Name = ir.def,
+                                            event_ = "Итоговая оценка выставлена менее, чем порог(3ТР, 5СЕМ)",
+                                            Student = Student,
+                                            avg = calc,
+                                            ball = valitog,
+                                            cnt = cntTrimestr.ToString(),
+                                            kod = 2
+                                        });
                                         isErrors = true;
                                     }
                                     ////////////////////////////////////////////////////////////////
@@ -544,9 +785,62 @@ namespace JournalWork
                                     ////////////////////////////////////////////////////////////////
                                     if (cntTrimestrNone > (cntTrimestrAll * 2 / 3))
                                     {
-                                        dsSemestr.Add(new Semestr_ { Tutor = tutorName, Subj = subj, Class_ = class_, ClassNum = ClassNum, Name = ir.def, event_ = "Количество пропусков уроков за триместр/семестр превышает 2/3 ", Student = dr[j][1].ToString(), skip = cntTrimestrNone.ToString() + "/" + cntTrimestrAll.ToString() });
+                                        dsSemestr.Add(new Semestr_
+                                        {
+                                            Tutor = tutorName,
+                                            Subj = subj,
+                                            Class_ = class_,
+                                            ClassNum = ClassNum,
+                                            Name = ir.def,
+                                            event_ = "Количество пропусков уроков за триместр/семестр превышает 2/3 ",
+                                            Student = Student,
+                                            skip = cntTrimestrNone.ToString() + "/" + cntTrimestrAll.ToString()
+                                        });
                                         isErrors = true;
                                     }
+                                }
+
+                                ////////////////////////////////////////////////////////////////
+                                // Считаем баллы за ГОД
+                                ////////////////////////////////////////////////////////////////
+                                if (rct.getByID((TConvert.ToInt(rc[i].def) + 2).ToString())!=null)
+                                {
+                                    valitog = TConvert.ToInt(Regex.Replace(TConvert.ToString(dr[j][TConvert.ToInt(rc[i].def) + 2]), "[^0-9]", ""));
+                                    if (valitog > 0)
+                                    {
+                                        ItemRoot ir = rct.getByID((TConvert.ToInt(rc[i].def) + 2).ToString());
+                                        ////////////////////////////////////////////////////////////////
+                                        // Проверяем средний балл за Год
+                                        ////////////////////////////////////////////////////////////////
+                                        if (sumYear > 0)
+                                        {
+                                            double calc = (cntYear != 0) ? TConvert.ToDouble(sumYear) / TConvert.ToDouble(cntYear) : 0;
+                                            // Округляем
+                                            int num = (int)calc;
+                                            double fract = calc - num + 0.001;
+                                            if (fract >= Koeff) num++;
+                                            if (num != valitog)
+                                            {
+                                                dsSemestr.Add(new Semestr_
+                                                {
+                                                    Tutor = tutorName,
+                                                    Subj = subj,
+                                                    Class_ = class_,
+                                                    ClassNum = ClassNum,
+                                                    Name = ir.def,
+                                                    event_ = "Не верный средний бал",
+                                                    Student = Student,
+                                                    avg = calc,
+                                                    ball = valitog,
+                                                    cnt = cntYear.ToString(),
+                                                    kod = 1
+                                                });
+                                                isErrors = true;
+                                            }
+                                        }
+                                    }
+                                    sumYear = 0;
+                                    cntYear = 0;
                                 }
 
                             }
@@ -556,16 +850,19 @@ namespace JournalWork
 
                     if (isErrors)
                     {
-                        foreach (string s in mTutor)
-                        {
+                        //foreach (string s in mTutor)
+                        //{
+                            string s = mTutor[mTutor.Length - 1];
                             string[] mFio = s.Trim().Split(' ');
-                            string one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
+                            string one = mFio[0];
+                            if (mFio.Length == 3) one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
                             ItemRoot ir = good.getByID(one);
                             if (ir != null)
                             {
-                                good.Remove(good.GetIndex(ir.ID));
+                                ir.def = "1";
+                                //good.Remove(good.GetIndex(ir.ID));
                             }
-                        }
+                        //}
                     }
                 }
                 else listLession.Add(new RootCollection());
@@ -694,17 +991,20 @@ namespace JournalWork
             lblPlan.Text = String.Format("{0}/{1}", cntPlan, totPlan);
 
             shcool_SelectedIndexChanged(null, null);
+            for (int i= good.Count - 1; i>= 0; i--) if (good[i].def == "1") good.Remove(good. GetIndex(good[i].ID));
             goodGridView.DataSource = good;
             goodGridView.Refresh();
 
         }
+
         private void BindPlan()
         {
             DateTime currDT = DateTime.Now;
-            DateTime sdt;
+            DateTime sdt = DateTime.Now, olddt = DateTime.Now;
             bool isErrors = false;
             bool isFirst = false;
             string[] mTutor = { };
+            int ClassNum = 0;
             foreach (DataTable tbl in resultPlan.Tables)
             {
                 DataRow[] dr = tbl.Select();
@@ -717,7 +1017,7 @@ namespace JournalWork
                     if ((TConvert.ToString(dr[pos][0]) != "") && (TConvert.ToString(dr[pos][1]) == ""))
                     {
                         string str0 = "", str2 = "", str3 = "", class_ = "", subj = "", tutorName = "";
-                        int ClassNum = 0;
+                        ClassNum = 0;
                         currItem = null;
                         while ((str0=="")|| (str2 == "")|| (str3 == ""))
                         {
@@ -729,6 +1029,8 @@ namespace JournalWork
                                 class_ = str0.Split('(')[0];
                                 ClassNum = TConvert.ToInt(Regex.Replace(class_, "[^0-9]", ""));
                                 if (ClassNum < 2) return;
+                                if (ClassNum == 10)
+                                    str2="";
                             }
                             if (str.ToUpper().IndexOf("ПРЕДМЕТ") != -1)
                             {
@@ -738,15 +1040,17 @@ namespace JournalWork
                             if (str.ToUpper().IndexOf("ФИО") != -1)
                             {
                                 tutorName = str.Split(':')[1];
-                                str3 = tutorName;
                                 mTutor = tutorName.Trim().Split(',');
                                 tutorName = "";
                                 foreach (string s in mTutor)
                                 {
                                     string[] mFio = s.Trim().Split(' ');
-                                    string one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
-                                    tutorName += ((tutorName != "") ? ", " : "") + one;
+                                    string one = mFio[0];
+                                    if(mFio.Length==3) one = mFio[2] + " " + mFio[0].Substring(0, 1) + "." + mFio[1].Substring(0, 1) + ".";
+                                    //tutorName += ((tutorName != "") ? ", " : "") + one;
+                                    tutorName = one;
                                 }
+                                str3 = tutorName;
                             }
                             pos++;
                             if (pos == dr.Length) break;
@@ -754,13 +1058,14 @@ namespace JournalWork
                         foreach (RootCollection rc in listLession)
                         {
                             if (rc.Count > 0)
-                                if ((str0.IndexOf(rc[0].FullName.Trim()) != -1) && (rc[0].Comment.IndexOf(str2.Trim()) != -1)) // && (rc[0].FieldStat.Trim() == str3.Trim()))
+                                if ((str0.IndexOf(rc[0].Class_.Trim()) != -1) && (rc[0].Comment.IndexOf(str2.Trim()) != -1)) // && (rc[0].FieldStat.Trim() == str3.Trim()))
                                 {
                                     cntPlan++;
                                     currItem = rc;
                                     poslist = listLession.IndexOf(currItem);
                                     currTable = mResult[rc[0].posResults].Tables[rc[0].posTables].Select();
                                     isFirst = true;
+                                    olddt = DateTime.Now;
                                     break;
                                 }
                         }
@@ -770,33 +1075,73 @@ namespace JournalWork
                     {
                         if (currItem != null)
                         {
+                            if ((ClassNum == 4) && (currItem[0].Subj.ToLower().IndexOf("основы светской этики") != -1))
+                                break;
+
                             string s = TConvert.ToString(dr[pos][0]);
-                            if((s.Substring(2,1)==".")&& (s.Substring(5, 1) == "."))
+                            if (s.IndexOf(".") != -1)
                             {
-                                sdt = TConvert.ToDateTime(dr[pos][0]);
-                                if (sdt <= currDT)
+                                DateTime dt = TConvert.ToDateTime(dr[pos][0]);
+                                if (dt <= currDT)
                                 {
+                                    sdt = dt;
                                     ItemRoot ir = currItem.getByID(String.Format("{0}.{1}.{2}", sdt.Day, sdt.Month, sdt.Year));
 
-                                    string class_ = currItem[0].FullName.Split('(')[0];
-                                    int ClassNum = TConvert.ToInt(Regex.Replace(class_, "[^0-9]", ""));
+                                    string class_ = currItem[0].Class_.Split('(')[0];
+                                    ClassNum = TConvert.ToInt(Regex.Replace(class_, "[^0-9]", ""));
 
                                     string str = TConvert.ToString(dr[pos][2]);
-                                    if (str.Length <= 3)
+                                    if ((str.Length < 3) && (ir.FullName != "1"))
                                     {
-                                        dsPlan.Add(new Plan
-                                        { 
-                                            Tutor = currItem[0].FieldStat,
-                                            Subj = currItem[0].Subj,
-                                            Class_ = class_,
-                                            ClassNum = ClassNum,
-                                            dt = sdt,
-                                            event_ = "Нет домашнего задания"
-                                        });
-                                        isErrors = true;
+                                        str = TConvert.ToString(dr[pos][1]).ToLower();
+                                        if ((str.IndexOf("диктант") != -1) || (str.IndexOf("контрольная") != -1) || (str.IndexOf("лабораторная") != -1) || (str.IndexOf("проверочная") != -1) ||
+                                            (str.IndexOf("практическая") != -1) || (str.IndexOf("самостоятельная") != -1) || (str.IndexOf("тест") != -1) || (str.IndexOf("изложение") != -1) ||
+                                            (str.IndexOf("сочинение") != -1) || (str.IndexOf("зачет") != -1) || (ir.FullName == "1"))
+                                        {
+                                        }
+                                        else
+                                        {
+                                            if (TConvert.ToString(dr[pos][2]) == "/")
+                                                str = "";
+                                            if (dr.Length > pos + 1)
+                                            {
+                                                s = TConvert.ToString(dr[pos + 1][0]);
+                                                if (s.IndexOf(".") != -1)
+                                                {
+                                                    dt = TConvert.ToDateTime(dr[pos + 1][0]);
+                                                    if (dt != sdt)
+                                                    {
+                                                        dsPlan.Add(new Plan
+                                                        {
+                                                            Tutor = currItem[0].FieldStat,
+                                                            Subj = currItem[0].Subj,
+                                                            Class_ = class_,
+                                                            ClassNum = ClassNum,
+                                                            dt = sdt,
+                                                            event_ = "Нет домашнего задания"
+                                                        });
+                                                        isErrors = true;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                dsPlan.Add(new Plan
+                                                {
+                                                    Tutor = currItem[0].FieldStat,
+                                                    Subj = currItem[0].Subj,
+                                                    Class_ = class_,
+                                                    ClassNum = ClassNum,
+                                                    dt = sdt,
+                                                    event_ = "Нет домашнего задания"
+                                                });
+                                                isErrors = true;
+                                            }
+                                        }
                                     }
                                     str = TConvert.ToString(dr[pos][1]).ToLower();
-                                    if (str.Length <= 3)
+                                    string str1 = TConvert.ToString(dr[pos][2]).ToLower();
+                                    if (str.Length < 3)
                                     {
                                         dsPlan.Add(new Plan
                                         {
@@ -811,7 +1156,8 @@ namespace JournalWork
                                     }
                                     if (isFirst)
                                     {
-                                        if ((str.IndexOf("инструктаж") == -1) && (str.IndexOf("охрана труда") == -1) && (str.IndexOf("по охране труда") == -1))
+                                        if ((str.IndexOf("инструктаж") == -1) && (str.IndexOf("охрана труда") == -1) && (str.IndexOf("по охране труда") == -1)&&
+                                            (str1.IndexOf("инструктаж") == -1) && (str1.IndexOf("охрана труда") == -1) && (str1.IndexOf("по охране труда") == -1))
                                         {
                                             dsPlan.Add(new Plan
                                             {
@@ -829,7 +1175,8 @@ namespace JournalWork
                                     {
                                         if (TConvert.ToDateTime(dr[pos - 1][0]).Year < sdt.Year)
                                         {
-                                            if ((str.IndexOf("инструктаж") == -1) && (str.IndexOf("охрана труда") == -1) && (str.IndexOf("по охране труда") == -1))
+                                            if ((str.IndexOf("инструктаж") == -1) && (str.IndexOf("охрана труда") == -1) && (str.IndexOf("по охране труда") == -1)&&
+                                                (str1.IndexOf("инструктаж") == -1) && (str1.IndexOf("охрана труда") == -1) && (str1.IndexOf("по охране труда") == -1))
                                             {
                                                 dsPlan.Add(new Plan
                                                 {
@@ -844,26 +1191,43 @@ namespace JournalWork
                                             }
                                         }
                                     }
-                                    for (int i= currItem[0].lineBegin; i<currTable.Length; i++)
+                                    if ((str.IndexOf("диктант") != -1) || (str.IndexOf("контрольная") != -1) || (str.IndexOf("лабораторная") != -1) || (str.IndexOf("проверочная") != -1) ||
+                                        (str.IndexOf("практическая") != -1) || (str.IndexOf("самостоятельная") != -1) || (str.IndexOf("тест") != -1) || (str.IndexOf("изложение") != -1) || (str.IndexOf("сочинение") != -1))
                                     {
-                                        if ((str.IndexOf("диктант") != -1) || (str.IndexOf("контрольная") != -1) || (str.IndexOf("лабораторная") != -1) || (str.IndexOf("проверочная") != -1) ||
-                                            (str.IndexOf("практическая") != -1) || (str.IndexOf("самостоятельная") != -1) || (str.IndexOf("тест") != -1) || (str.IndexOf("изложение") != -1) || (str.IndexOf("сочинение") != -1))
+                                        int indexLession = currItem.GetIndex(ir.ID);
+                                        int indexLession_ = indexLession;
+                                        bool err = false;
+                                        string dtl = ir.ID;
+                                        while (currItem[indexLession].ID == currItem[indexLession_].ID)
                                         {
-                                            str = TConvert.ToString(currTable[i][TConvert.ToInt(ir.def)]);
-                                            if (str == "")
+                                            err = false;
+                                            int posLession = TConvert.ToInt(currItem[indexLession_].def);
+                                            for (int i = currItem[0].lineBegin; i < currTable.Length; i++)
                                             {
-                                                dsPlan.Add(new Plan
+                                                str = TConvert.ToString(currTable[i][posLession]);
+                                                if (str == "")
                                                 {
-                                                    Tutor = currItem[0].FieldStat,
-                                                    Subj = currItem[0].Subj,
-                                                    Class_ = class_,
-                                                    ClassNum = ClassNum,
-                                                    dt = sdt,
-                                                    event_ = "Нет оценки за контрольное занятие",
-                                                    Student = TConvert.ToString(currTable[i][1])
-                                                });
-                                                isErrors = true;
+                                                    err = true;
+                                                    break;
+                                                }
                                             }
+                                            if (!err) break;
+                                            indexLession_++;
+                                            if (indexLession_ == currItem.Count) break;
+                                        }
+                                        if (err)
+                                        {
+                                            dsPlan.Add(new Plan
+                                            {
+                                                Tutor = currItem[0].FieldStat,
+                                                Subj = currItem[0].Subj,
+                                                Class_ = class_,
+                                                ClassNum = ClassNum,
+                                                dt = sdt,
+                                                event_ = "Нет оценки за контрольное занятие"
+                                                //Student = TConvert.ToString(currTable[i][1])
+                                            });
+                                            isErrors = true;
                                         }
                                     }
 
@@ -875,7 +1239,8 @@ namespace JournalWork
                                             ItemRoot ir_ = good.getByID(currItem[0].FieldStat);
                                             if (ir != null)
                                             {
-                                                good.Remove(good.GetIndex(ir.ID));
+                                                ir.def = "1";
+                                                //good.Remove(good.GetIndex(ir.ID));
                                             }
                                         }
                                         isErrors = false;
@@ -889,40 +1254,124 @@ namespace JournalWork
                 }
             }
         }
+
+        private void koeffGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            AdvancedDataGridView gv = (AdvancedDataGridView)sender;
+            DataTable tbl = (DataTable)gv.DataSource;
+            ///////////////////////////////////////////////////////////////////////
+            // Сохраняем коэффициенты
+            ///////////////////////////////////////////////////////////////////////
+            serializer = new XmlSerializer(typeof(List<Subject>));
+            using (FileStream stream = File.OpenWrite("subject.xml"))
+            {
+                List<Subject> lst = new List<Subject>();
+                foreach (DataRow r in tbl.Rows) lst.Add(new Subject { Name = r["Name"].ToString(), koeff = TConvert.ToDouble(r["koeff"]) });
+                serializer.Serialize(stream, lst);
+            }
+            ///////////////////////////////////////////////////////////////////////
+        }
+
+        private void активностьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 fm = new Form2();
+            fm.Show();
+        }
+
         private void настроитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ItemRoot item = lstSemestr.getByID(period.Text);
+            if (item == null) return;
+
             Report report = new Report();
-            //report.Load()
+            report.Load("spravka1.frx");
 
             DataSet ds = new DataSet();
 
-            DataTable tbl = (DataTable)dataGridView1.DataSource;
-            tbl.TableName = "Journal";
+            //IEnumerable<Event_> lst = dsEvent.Where(ev => (ev.kod > 0) && (ev.dt >= item.dt1) && (ev.dt <= item.dt2) && ((item.ID.IndexOf("ТР") != -1)?ev.ClassNum<10:ev.ClassNum>9) );
+            //DataTable tbl = ToDataTable(lst.ToList());
+            //tbl.TableName = "Journal";
+            //ds.Tables.Add(tbl);
+
+            RootCollection rc = new RootCollection();
+            IEnumerable<Tutor> lst1 = dsTutor.Where(ev => ((item.ID.IndexOf("ТР") != -1) ? ev.ClassNum < 10 : ev.ClassNum > 9));
+            string class_ = "";
+            foreach (Tutor t in lst1)
+            {
+                rc.Add(new ItemRoot { ID = t.Name, Name=t.Class_ });
+                if (class_.IndexOf(t.Class_) == -1) class_ += ((class_ != "") ? "," : "") + t.Class_;
+            }
+            DataTable tbl = ToDataTable(lst1.ToList());
+            tbl.TableName = "Tutor";
             ds.Tables.Add(tbl);
 
-            tbl = (DataTable)semestrGridView.DataSource;
+            string classgood = class_;
+            string tutorbad = "";
+            IEnumerable<Semestr_> lst = dsSemestr.Where(ev => (ev.kod > 0) && (ev.Name == item.ID));
+            foreach(Semestr_ sem in lst)
+            {
+                string[] mTutor = sem.Tutor.Split(',');
+                foreach(string s in mTutor)
+                {
+                    ItemRoot r = rc.getByID(s.Trim());
+                    if (r != null)
+                    {
+                        rc.Remove(rc.GetIndex(r.ID));
+                        tutorbad += ((tutorbad != "") ? "," : "") + s;
+                    }
+                }
+                classgood = classgood.Replace(sem.Class_ + ",", "");
+                classgood = classgood.Replace(sem.Class_, ", ");
+            }
+            classgood = classgood.Trim();
+            if (classgood.Length > 0)
+            {
+                while (classgood.Substring(0, 1) == ",") classgood = classgood.Substring(1, classgood.Length - 1);
+                while (classgood.Substring(classgood.Length - 1, 1) == ",") classgood = classgood.Substring(0, classgood.Length - 1);
+                classgood = classgood.Trim();
+            }
+
+            lst = dsSemestr.Where(ev => (ev.kod == 1) && (ev.Name == item.ID));
+            tbl = ToDataTable(lst.ToList());
             tbl.TableName = "Semestr";
             ds.Tables.Add(tbl);
 
-            tbl = (DataTable)planGridView.DataSource;
-            tbl.TableName = "Plan";
+            lst = dsSemestr.Where(ev => (ev.kod == 2) && (ev.Name == item.ID));
+            tbl = ToDataTable(lst.ToList());
+            tbl.TableName = "Semestr2";
             ds.Tables.Add(tbl);
 
             report.RegisterData(ds);
-            report.GetDataSource("Journal").Enabled = true;
             report.GetDataSource("Semestr").Enabled = true;
-            report.GetDataSource("Plan").Enabled = true;
+            report.GetDataSource("Semestr2").Enabled = true;
+            report.GetDataSource("Tutor").Enabled = true;
             report.AutoFillDataSet = true;
 
-            report.SetParameterValue("Number", "1");
+            report.SetParameterValue("Name", item.ID);
+            report.SetParameterValue("Number", item.posResults.ToString());
+            report.SetParameterValue("dt0", DateTime.Now.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt1", item.dt1.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt2", item.dt2.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt3", (DateTime.Now.AddDays(7)).ToString("dd.MM.yyyy"));
+            report.SetParameterValue("repYear", repYear);
 
-            ReportPage page = new ReportPage();
+            string good = "";
+            foreach(ItemRoot r in rc) {
+                good += ((good != "") ? "," : "") + r.ID;
+            };
+            report.SetParameterValue("good", good);
+            report.SetParameterValue("classes", class_);
+            report.SetParameterValue("classesgood", classgood);
+            report.SetParameterValue("tutorbad", tutorbad);
 
-            report.Pages.Add(page);
+            report.SetParameterValue("type", (item.ID.IndexOf("ТР") != -1) ? "триместр" : "семестр");
+            report.SetParameterValue("type1", (item.ID.IndexOf("ТР") != -1) ? "триместровых" : "семестровых");
 
-            page.CreateUniqueName();
+            //ReportPage page = new ReportPage();
+            //report.Pages.Add(page);
+            //page.CreateUniqueName();
 
-            report.Design();
+//            report.Design();
 
             report.Dispose();
             ds.Dispose();
@@ -930,6 +1379,147 @@ namespace JournalWork
 
         private void показатьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ItemRoot item = lstSemestr.getByID(period.Text);
+            if (item == null) return;
+
+            this.Cursor = Cursors.WaitCursor;
+            Report report = new Report();
+            using (MemoryStream stream = new MemoryStream(Properties.Resources.balls))
+            {
+                report.Load(stream);
+            }
+            //report.Load("../../balls.frx");
+
+            DataSet ds = new DataSet();
+
+            IEnumerable<Event_> lst = dsEvent.Where(ev => (ev.kod > 0) && (ev.dt >= item.dt1) && (ev.dt <= item.dt2) && ((item.ID.IndexOf("ТР") != -1) ? ev.ClassNum < 10 : ev.ClassNum > 9));
+            DataTable tbl = ToDataTable(lst.ToList());
+            tbl.TableName = "Journal";
+            ds.Tables.Add(tbl);
+
+            report.RegisterData(ds);
+            report.GetDataSource("Journal").Enabled = true;
+            report.AutoFillDataSet = true;
+
+            report.SetParameterValue("Name", item.ID);
+            report.SetParameterValue("Number", item.posResults.ToString());
+            report.SetParameterValue("dt1", item.dt1.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt2", item.dt2.ToString("dd.MM.yyyy"));
+
+            this.Cursor = Cursors.Default;
+            report.Prepare();
+//            report.ShowPrepared();
+            //report.Design();
+
+            report.Dispose();
+            ds.Dispose();
+        }
+
+        private void справкаПоПроверкеЖурналовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ItemRoot item = lstSemestr.getByID(period.Text);
+            if (item == null) return;
+
+            this.Cursor = Cursors.WaitCursor;
+            Report report = new Report();
+            using (MemoryStream stream = new MemoryStream(Properties.Resources.spravka1))
+            {
+                report.Load(stream);
+            }
+            //report.Load("../../spravka1.frx");
+
+            DataSet ds = new DataSet();
+
+            List<Tutor> dsTutor1 = new List<Tutor>();
+            RootCollection rc = new RootCollection();
+            List<Tutor> lst1 = dsTutor.Where(ev => ((item.ID.IndexOf("ТР") != -1) ? ev.ClassNum < 10 : ev.ClassNum > 9)).ToList();
+            string class_ = "";
+            foreach (Tutor t in lst1)
+            {
+                if (rc.getByID(t.Name) == null)
+                {
+                    rc.Add(new ItemRoot { ID = t.Name, Name = t.Class_ });
+                    dsTutor1.Add(t);
+                }
+                if (class_.IndexOf(t.Class_) == -1) class_ += ((class_ != "") ? "," : "") + t.Class_;
+            }
+            DataTable tbl = ToDataTable(dsTutor1);
+            tbl.TableName = "Tutor";
+            ds.Tables.Add(tbl);
+
+            string classgood = class_;
+            string tutorbad = "";
+            List<Semestr_> lst = dsSemestr.Where(ev => (ev.kod > 0) && (ev.Name == item.ID)).ToList();
+            foreach (Semestr_ sem in lst)
+            {
+                string[] mTutor = sem.Tutor.Split(',');
+                foreach (string s in mTutor)
+                {
+                    ItemRoot r = rc.getByID(s.Trim());
+                    if (r != null)
+                    {
+                        rc.Remove(rc.GetIndex(r.ID));
+                        tutorbad += ((tutorbad != "") ? "," : "") + s;
+                    }
+                }
+                classgood = classgood.Replace(sem.Class_ + ",", "");
+                classgood = classgood.Replace(sem.Class_, ", ");
+            }
+            classgood = classgood.Trim();
+            if (Regex.Replace(classgood, "[^0-9]", "").Length > 0)
+            {
+                while (classgood[0] == ',') { classgood = classgood.Substring(1, classgood.Length - 1); };
+                while (classgood[classgood.Length - 1] == ',') classgood = classgood.Substring(0, classgood.Length - 1);
+                classgood = classgood.Trim();
+            }else
+            {
+                classgood = "";
+            }
+
+            lst = dsSemestr.Where(ev => (ev.kod == 1) && (ev.Name == item.ID)).ToList();
+            tbl = ToDataTable(lst);
+            tbl.TableName = "Semestr";
+            ds.Tables.Add(tbl);
+
+            lst = dsSemestr.Where(ev => (ev.kod == 2) && (ev.Name == item.ID)).ToList();
+            tbl = ToDataTable(lst);
+            tbl.TableName = "Semestr2";
+            ds.Tables.Add(tbl);
+
+            report.RegisterData(ds);
+            report.GetDataSource("Semestr").Enabled = true;
+            report.GetDataSource("Semestr2").Enabled = true;
+            report.GetDataSource("Tutor").Enabled = true;
+            report.AutoFillDataSet = true;
+
+            report.SetParameterValue("Name", item.ID);
+            report.SetParameterValue("Number", item.posResults.ToString());
+            report.SetParameterValue("dt0", DateTime.Now.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt1", item.dt1.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt2", item.dt2.ToString("dd.MM.yyyy"));
+            report.SetParameterValue("dt3", (DateTime.Now.AddDays(7)).ToString("dd.MM.yyyy"));
+            report.SetParameterValue("repYear", repYear);
+
+            string good = "";
+            foreach (ItemRoot r in rc)
+            {
+                good += ((good != "") ? "," : "") + r.ID;
+            };
+            report.SetParameterValue("good", good);
+            report.SetParameterValue("classes", class_);
+            report.SetParameterValue("classesgood", classgood);
+            report.SetParameterValue("tutorbad", tutorbad);
+
+            report.SetParameterValue("type", (item.ID.IndexOf("ТР") != -1) ? "триместр" : "семестр");
+            report.SetParameterValue("type1", (item.ID.IndexOf("ТР") != -1) ? "триместровых" : "семестровых");
+
+            this.Cursor = Cursors.Default;
+            report.Prepare();
+//            report.ShowPrepared();
+            //report.Design();
+
+            report.Dispose();
+            ds.Dispose();
 
         }
 
