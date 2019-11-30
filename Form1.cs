@@ -4,15 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ADGV;
 using FastReport;
 using System.Xml.Serialization;
+using System.Net.Sockets;
+using Newtonsoft.Json;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace JournalWork
 {
@@ -96,6 +98,8 @@ namespace JournalWork
             semestrGridView.DataSource = tbl;
 
             itmOpenPlan.Enabled = false;
+
+            ////////////////////////////////////////////////////////////////
 
         }
 
@@ -1408,7 +1412,7 @@ namespace JournalWork
 
             this.Cursor = Cursors.Default;
             report.Prepare();
-//            report.ShowPrepared();
+            report.ShowPrepared();
             //report.Design();
 
             report.Dispose();
@@ -1515,7 +1519,7 @@ namespace JournalWork
 
             this.Cursor = Cursors.Default;
             report.Prepare();
-//            report.ShowPrepared();
+            report.ShowPrepared();
             //report.Design();
 
             report.Dispose();

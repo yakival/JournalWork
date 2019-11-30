@@ -121,13 +121,13 @@
   <data name="balls" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\balls.frx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="spravka1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\spravka1.frx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Version" xml:space="preserve">
     <value>1.1</value>
   </data>
   <data name="spravka2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\spravka2.frx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="spravka1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\spravka1.frx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
